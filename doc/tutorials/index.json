@@ -1,5 +1,9 @@
 {
   "index": {
-    "title": "Index"
+    "title": "Index",
+    "children": [ "queue" ]
+  },
+  "queue": {
+    "title": "Queues"
   }
 }

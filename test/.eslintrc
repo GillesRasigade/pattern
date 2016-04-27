@@ -1,9 +1,14 @@
 {
   "extends": "eslint-config-airbnb",
   "globals": {
+    "before": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "after": true,
     "describe": true,
     "it": true,
-    "expect": true
+    "expect": true,
+    "sinon": true
   },
   "rules": {
     "no-underscore-dangle": 0,
