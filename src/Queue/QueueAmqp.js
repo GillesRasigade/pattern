@@ -74,9 +74,9 @@ class QueueAmqp extends Queue {
       this._options.tx = RABBITMQ_BIGWIG_TX_URL;
     }
 
-
     this.name = this._options.name || 'queue';
 
+    this._options.exchangeName = this._options.exchangeName || this.name;
     this._options.queue = this._options.queue || {};
     this._options.type = this._options.type || 'direct';
     this._options.exchange = this._options.exchange || {};
@@ -184,12 +184,34 @@ class QueueAmqp extends Queue {
     this.rxChannel.bindQueue(this.queueName, this.exchangeName, topic);
     this.rxChannel.consume(this.queueName, msg => {
       // @todo REMOVE
-      this.rxChannel.ack(msg);
+      if (this._options.ack) {
+        this.rxChannel.ack(msg);
+      }
       const message = msg.content.toString();
       const args = JSON.parse(message);
       args.push(msg);
       func.apply(null, args);
     });
+    return this;
+  }
+
+  /**
+   * Acknowledge the message
+   * @param  {Message} msg Message to acknowledge
+   * @return {QueueAmqp}   The queue used to acknowledge
+   */
+  ack(msg) {
+    this.rxChannel.ack(msg);
+    return this;
+  }
+
+  /**
+   * Not acknowledge the message
+   * @param  {Message} msg Message to acknowledge
+   * @return {QueueAmqp}   The queue used to acknowledge
+   */
+  nack(msg) {
+    this.rxChannel.nack(msg);
     return this;
   }
 }
