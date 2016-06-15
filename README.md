@@ -4,6 +4,58 @@
 
 Useful patterns for NodeJS development
 
+## Roadmap
+
+### Validator
+
+A Validator is a component validating a data against a schema. Currently the only
+Validator available is for JSON data and JSON Schema definition.
+
+- [x] JSON Schema
+- [ ] Date
+- [ ] Number
+
+### Queues
+
+Queues are based on the Interface of EventEmitter where a message can be routed
+to one or several suscribers. Different technologies can be used to distribute
+message: EventEmitter, AMQP, WebSocket. By combining all these three approaches
+a message can transit from a browser to another browser in a fully scalable and
+distributed manner.
+
+- [x] EventEmitter
+- [x] AMQP
+- [x] WebSocket
+
+### Mappers
+
+Mappers are responsible of the Extract (E) and Load (L) parts from the ETL stack.
+From a given object definition, she is able to load data from a specific data
+source and persists it in.
+
+- [x] MongoDb
+- [ ] Swagger API
+- [ ] Mock
+- [ ] Redis
+- [ ] PostgreSQL
+
+### Entity
+
+An Entity is a Domain Model object embedding a business logic. She is persisted
+thanks to the Mapper components.
+
+- [ ] Entity
+
+### Localization
+
+Component responsible of the localization of strings, currencies, date, etc.
+
+### Logger
+
+Logger component
+
+### Under consideration
+
 ## Getting started
 
 ### Installation
