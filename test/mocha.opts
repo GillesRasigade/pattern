@@ -1,3 +1,4 @@
 --require test/bootstrap.js
 --require co-mocha
 --recursive
+--timeout 5000
