@@ -11,7 +11,7 @@ describe('MapperMongoDb', () => {
     expect(MapperMongoDb.prototype.findObjects).to.be.a('function');
   });
   it('implements additional methods', () => {
-    expect(MapperMongoDb.prototype.connect).to.be.a('function');
+    expect(typeof MapperMongoDb.prototype.connect).to.be.eql('function');
     expect(MapperMongoDb.prototype.getObjectCollectionName).to.be.a('function');
     expect(MapperMongoDb.prototype.getObjectCollection).to.be.a('function');
   });
