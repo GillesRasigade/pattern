@@ -3,9 +3,9 @@
 const QueueWebSocket = require('../../src/Queue/QueueWebSocket');
 
 const EventEmitter = require('events').EventEmitter;
-const net = require('net')
+const net = require('net');
 const WebSocket = require('ws');
-// const WebSocket = require('uws');
+const WebSocketServer = require('uws').Server;
 
 describe('QueueWebSocket', () => {
   const sandbox = sinon.sandbox.create();
@@ -19,7 +19,7 @@ describe('QueueWebSocket', () => {
     http.close();
 
     // Close all client queues:
-    for (var queue of queues) {
+    for (const queue of queues) {
       queue.close();
     }
     queues = [];
@@ -46,7 +46,7 @@ describe('QueueWebSocket', () => {
       const result = yield server.connect();
 
       expect(result).to.be.eql(true);
-      expect(server.ws).to.be.an.instanceof(WebSocket.Server);
+      expect(server.ws).to.be.an.instanceof(WebSocketServer);
     });
 
     it('allows to open a websocket as a client', function* it() {
@@ -60,82 +60,12 @@ describe('QueueWebSocket', () => {
       expect(result).to.be.eql(true);
       expect(client.ws).to.be.an.instanceof(WebSocket);
     });
-
-    xit('test full', function* it(done) {
-      server = new QueueWebSocket({ name: 'server', server: true });
-      const client = new QueueWebSocket({ name: 'client' });
-      const client2 = new QueueWebSocket({ name: 'client2' });
-
-      queues.push(client);
-      queues.push(client2);
-
-      yield server.connect();
-
-      console.log(51);
-      yield client.connect();
-      console.log(53);
-
-      yield client2.connect();
-
-
-      server.ws.close();
-      QueueWebSocket.portInUse(4080, (err, res) => {
-        console.log(64, res);
-        done();
-      })
-
-      return;// done();
-      // console.log(37, server.ws, client.ws);
-
-      // server.ws.broadcast('test server');
-
-      // client.emit('test');
-      // client2.emit('test 2');
-
-      client.on('topic', msg => {
-        console.log(72, msg);
-      });
-      client.on('topic', msg => {
-        console.log(75, msg);
-      });
-      client.on('topic2', msg => {
-        console.log(78, msg);
-      });
-      client.on('*', msg => {
-        console.log(81, msg);
-      });
-      client2.on('topic', msg => {
-        console.log(84, msg);
-      });
-
-      setTimeout(() => {
-        // server.emit('*', 'test');
-
-        // Unexpected ws closing:
-        // client.ws.close();
-        server.ws.close();
-        setTimeout(() => {
-          // server.emit('*', 'test');
-
-          // client2.close();
-
-          server.emit('topic', 'test');
-
-          // client.ws.close();
-
-          setTimeout(done, 2000);
-        // });
-        }, 1000);
-
-
-      }, 500);
-    });
   });
 
   describe('#broadcast()', () => {
     it('throws an exception for client', function* it() {
       const queue = new QueueWebSocket({ name: 'queue' });
-      expect(function() {
+      expect(() => {
         queue.broadcast();
       }).to.throw(Error, 'Only WebSocket Server can broadcast');
     });
@@ -144,7 +74,7 @@ describe('QueueWebSocket', () => {
   describe('#onMessage()', () => {
     it('throws an exception on binary flag message', function* it() {
       const queue = new QueueWebSocket({ name: 'queue' });
-      expect(function() {
+      expect(() => {
         queue.onMessage(new Buffer(''), { binary: true });
       }).to.throw(Error, 'Binary flag not yet supported =)');
     });
@@ -153,17 +83,19 @@ describe('QueueWebSocket', () => {
   describe('#subscribe()', () => {
     it('subscribes client topics on special message', function* it(done) {
       server = new QueueWebSocket({ server: true });
-      yield server.connect();
 
       const queue = new QueueWebSocket({ name: 'queue' });
+
+      yield server.connect();
       yield queue.connect();
 
       queues.push(queue);
 
       queue.subscribe('topic');
       setTimeout(() => {
-        expect(server.ws.clients).to.have.property('length', 3);
-        expect(server.ws.clients[1]._topics).to.be.eql([ 'topic' ]);
+        const connections = Object.keys(server.connections);
+        expect(connections).to.have.property('length', 2);
+        expect(server.connections[connections[0]]._topics).to.be.eql(['topic']);
         done();
       }, 500);
     });
@@ -180,14 +112,14 @@ describe('QueueWebSocket', () => {
 
       const args = broadcastStub.lastCall.args;
       expect(args.length).to.be.eql(2);
-      expect(args[0]).to.be.eql(JSON.stringify({topic: 'task', args: ['Buy some milk']}));
+      expect(args[0]).to.be.eql(JSON.stringify({ topic: 'task', args: ['Buy some milk'] }));
       expect(args[1]).to.be.eql('task');
     });
 
     xit('publishes message to the WebSocket queue from the client', function* it() {
       const queue = new QueueWebSocket({ name: 'server' });
       queue.ws = {
-        send: () => true
+        send: () => true,
       };
       const stub = sandbox.stub(queue.ws, 'send');
 
@@ -197,7 +129,7 @@ describe('QueueWebSocket', () => {
 
       const args = stub.lastCall.args;
       expect(args.length).to.be.eql(2);
-      expect(args[0]).to.be.eql(JSON.stringify({topic: 'task', args: ['Buy some milk']}));
+      expect(args[0]).to.be.eql(JSON.stringify({ topic: 'task', args: ['Buy some milk'] }));
       expect(args[1]).to.be.eql({ mask: true });
     });
 
@@ -216,8 +148,9 @@ describe('QueueWebSocket', () => {
 
       queue2.on('task', msg => {
         expect(msg).to.be.eql('Buy some milk');
-        expect(server.ws.clients).to.have.property('length', 4);
-        expect(server.ws.clients[2]._topics).to.be.eql([ 'task' ]);
+        const connections = Object.keys(server.connections);
+        expect(connections).to.have.property('length', 3);
+        expect(server.connections[connections[2]]._topics).to.be.eql(['task']);
         done();
       });
 
@@ -230,7 +163,7 @@ describe('QueueWebSocket', () => {
   describe('#on()', () => {
     it('receives messages from the server', function* it(done) {
       server = new QueueWebSocket({ server: true, name: 'server' });
-      const result = yield server.connect();
+      yield server.connect();
 
       const queue = new QueueWebSocket({ name: 'queue' });
       yield queue.connect();
@@ -240,8 +173,9 @@ describe('QueueWebSocket', () => {
       queue.on('task', (msg) => {
         expect(msg).to.be.eql('message');
 
-        expect(server.ws.clients).to.have.property('length', 2);
-        expect(server.ws.clients[1]._topics).to.be.eql([ 'task' ]);
+        const connections = Object.keys(server.connections);
+        expect(connections).to.have.property('length', 2);
+        expect(server.connections[connections[0]]._topics).to.be.eql(['task']);
         done();
       });
 
@@ -252,7 +186,7 @@ describe('QueueWebSocket', () => {
 
     it('allows to bind several callbacks on the same topic', function* it(done) {
       server = new QueueWebSocket({ server: true, name: 'server' });
-      const result = yield server.connect();
+      yield server.connect();
 
       const queue = new QueueWebSocket({ name: 'queue' });
       yield queue.connect();
@@ -266,8 +200,9 @@ describe('QueueWebSocket', () => {
       queue.on('task', (msg) => {
         expect(msg).to.be.eql('message');
 
-        expect(server.ws.clients).to.have.property('length', 3);
-        expect(server.ws.clients[1]._topics).to.be.eql([ 'task' ]);
+        const connections = Object.keys(server.connections);
+        expect(connections).to.have.property('length', 2);
+        expect(server.connections[connections[0]]._topics).to.be.eql(['task']);
         done();
       });
 
@@ -278,7 +213,7 @@ describe('QueueWebSocket', () => {
 
     it('receives messages from another client', function* it(done) {
       server = new QueueWebSocket({ server: true, name: 'server' });
-      const result = yield server.connect();
+      yield server.connect();
 
       const queue = new QueueWebSocket({ name: 'queue' });
       yield queue.connect();
@@ -292,8 +227,12 @@ describe('QueueWebSocket', () => {
       queue.on('task', (msg) => {
         expect(msg).to.be.eql('message');
 
-        expect(server.ws.clients).to.have.property('length', 3);
-        expect(server.ws.clients[1]._topics).to.be.eql([ 'task' ]);
+        const connections = Object.keys(server.connections);
+        expect(connections).to.have.property('length', 3);
+        expect(server.connections[connections[0]]._topics).to.be.eql(['task']);
+
+        // expect(server.ws.clients).to.have.property('length', 3);
+        // expect(server.ws.clients[1]._topics).to.be.eql([ 'task' ]);
         done();
       });
 
@@ -304,7 +243,7 @@ describe('QueueWebSocket', () => {
 
     it('receives messages on the server from a client', function* it(done) {
       server = new QueueWebSocket({ server: true, name: 'server' });
-      const result = yield server.connect();
+      yield server.connect();
 
       const queue = new QueueWebSocket({ name: 'queue' });
       yield queue.connect();
@@ -314,8 +253,8 @@ describe('QueueWebSocket', () => {
       server.on('task', (msg) => {
         expect(msg).to.be.eql('message');
 
-        expect(server.ws.clients).to.have.property('length', 2);
-        expect(server.ws.clients[1]._topics).to.be.eql([]);
+        const connections = Object.keys(server.connections);
+        expect(connections).to.have.property('length', 2);
         done();
       });
 
@@ -335,7 +274,8 @@ describe('QueueWebSocket', () => {
 
       queues.push(queue);
 
-      expect(server.ws.clients).to.have.property('length', 2);
+      const connections = Object.keys(server.connections);
+      expect(connections).to.have.property('length', 2);
 
       setTimeout(() => {
         queue.close(() => {
@@ -375,8 +315,9 @@ describe('QueueWebSocket', () => {
       queue.on('task', (msg) => {
         expect(msg).to.be.eql('message');
 
-        expect(server.ws.clients).to.have.property('length', 3);
-        expect(server.ws.clients[2]._topics).to.be.eql([ 'task' ]);
+        const connections = Object.keys(server.connections);
+        expect(connections).to.have.property('length', 2);
+        expect(server.connections[connections[1]]._topics).to.be.eql(['task']);
         done();
       });
 
@@ -384,7 +325,7 @@ describe('QueueWebSocket', () => {
         queue.ws.close();
         setTimeout(() => {
           server.emit('task', 'message');
-        }, 1000)
+        }, 1000);
       }, 10);
     });
 
@@ -400,48 +341,42 @@ describe('QueueWebSocket', () => {
       queue.on('task', (msg) => {
         expect(msg).to.be.eql('message');
 
-        expect(server.ws.clients).to.have.property('length', 3);
+        const connections = Object.keys(server.connections);
+        expect(connections).to.have.property('length', 2);
         done();
       });
 
       setTimeout(() => {
+        server.ws.httpServer.close();
         server.ws.close();
         setTimeout(() => {
-          // console.log(415, server);
-          // console.log(212, 'Message emission');
           server.emit('task', 'message');
-          // done();
-        }, 1000)
+        }, 1000);
       }, 10);
     });
 
-    it('fails to reconnect server if the port is always taken', function* it(done) {
+    it('fails to reconnect server if the port is always taken', function* it() {
       server = new QueueWebSocket({
         server: true,
         name: 'server',
-        WEBSOCKET_RECONNECT_MAX_ATTEMPTS: 1
+        WEBSOCKET_RECONNECT_TIMEOUT: 100,
+        WEBSOCKET_RECONNECT_MAX_ATTEMPTS: 3,
       });
       yield server.connect();
 
       const queue = new QueueWebSocket({ name: 'queue' });
       yield queue.connect();
 
-      queues.push(queue);
+      yield cb => setTimeout(cb, 10);
 
-      setTimeout(() => {
-        server.ws.close();
+      server.ws.httpServer.close();
+      server.ws.close();
 
+      http.listen(4080, '127.0.0.1');
 
-        http.listen(4080, '127.0.0.1');
+      yield cb => setTimeout(cb, 1000);
 
-        setTimeout(() => {
-          // console.log(415, server._attempts);
-          expect(server._attempts).to.be.above(0);
-          // console.log(212, 'Message emission');
-          // server.emit('task', 'message');
-          done();
-        }, 500);
-      }, 10);
+      expect(server._attempts).to.be.eql(3);
     });
   });
 });

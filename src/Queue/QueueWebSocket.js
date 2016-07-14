@@ -2,8 +2,10 @@
 
 const WebSocket = require('ws');
 // const WebSocket = require('uws');
-const WebSocketServer = WebSocket.Server;
-const net = require('net')
+// const WebSocketServer = WebSocket.Server;
+const WebSocketServer = require('uws').Server;
+const net = require('net');
+const uuid = require('node-uuid');
 
 const co = require('co');
 
@@ -14,14 +16,14 @@ const Queue = require('./Queue');
  * @alias WEBSOCKET_PORT
  * @type {Integer}
  */
-const WEBSOCKET_PORT = process.env.WEBSOCKET_PORT || 4080;
+const WEBSOCKET_PORT = process.env.WEBSOCKET_PORT || 4080;
 
 /**
  * WEBSOCKET_RECONNECT_TIMEOUT
  * @alias WEBSOCKET_RECONNECT_TIMEOUT
  * @type {Integer}
  */
-const WEBSOCKET_RECONNECT_TIMEOUT = process.env.WEBSOCKET_RECONNECT_TIMEOUT || 100;
+const WEBSOCKET_RECONNECT_TIMEOUT = process.env.WEBSOCKET_RECONNECT_TIMEOUT || 500;
 
 /**
  * WEBSOCKET_RECONNECT_MAX_ATTEMPTS
@@ -110,6 +112,8 @@ class QueueWebSocket extends Queue {
     this.name = this._options.name || 'queue';
 
     this.ws = null;
+
+    this.connections = {};
   }
 
   /**
@@ -136,7 +140,7 @@ class QueueWebSocket extends Queue {
   /**
    * @return {Boolean} Does this queue a server ?
    */
-  get isServer () {
+  get isServer() {
     return this._options.server || false;
   }
 
@@ -144,13 +148,13 @@ class QueueWebSocket extends Queue {
    * Return the formatted client address to listen to.
    * @return {String} ws://[host]:[port] address
    */
-  get address () {
+  get address() {
     return `ws://${this._options.host || 'localhost'}:${this.WEBSOCKET_PORT}`;
   }
 
   static addTopic(ws, topic) {
     const len = ws._topics.length;
-    if (len === 0 || ws._topics[len-1] !== topic) {
+    if (len === 0 || ws._topics[len - 1] !== topic) {
       ws._topics.push(topic);
     }
   }
@@ -167,13 +171,14 @@ class QueueWebSocket extends Queue {
       }
       this.ws.removeAllListeners();
       if (this.isServer) {
-        this.ws.close(callback);
+        this.ws.httpServer.close();
+        this.connections = {};
+        callback();
       } else {
-        this.ws.on('close', callback || function(){});
+        this.ws.on('close', callback || (() => {}));
         this.ws.close(1000, '');
       }
-
-    } else if (typeof callback === 'function' ) {
+    } else if (typeof callback === 'function') {
       callback();
     }
     return this;
@@ -193,10 +198,14 @@ class QueueWebSocket extends Queue {
     }
 
     const self = this;
-    for(var i in self.ws.clients) {
-      const topics = self.ws.clients[i]._topics;
-      if (-1 !== topics.indexOf(topic)) {
-        self.ws.clients[i].send(message);
+    // self.connections.forEach(connection => {
+    for (const i in self.connections) { // eslint-disable-line no-restricted-syntax
+      if (self.connections.hasOwnProperty(i)) {
+        const connection = self.connections[i];
+        const topics = connection._topics;
+        if (topics.indexOf(topic) !== -1) {
+          connection.send(message);
+        }
       }
     }
     return this;
@@ -208,11 +217,12 @@ class QueueWebSocket extends Queue {
    * @param  {Object} flags   List of flags used for the communication
    * @return {QueueWebSocket} The queue binded to the websocket
    */
-  onMessage(message, flags) {
+  onMessage(message, flags = {}) {
     if (flags.binary) {
       throw new Error('Binary flag not yet supported =)');
     } else {
       const data = JSON.parse(message);
+
       if (this.queue.isServer) {
         // Special case of client subscription:
         if (data.subscribe) {
@@ -240,47 +250,50 @@ class QueueWebSocket extends Queue {
     const ws = this.ws;
 
     self._attempts = 0;
-    const cb = co.wrap(function* () {
-      if (self._attempts > self.WEBSOCKET_RECONNECT_MAX_ATTEMPTS) {
+    let timeout; // eslint-disable-line no-unused-vars
+
+    const cb = co.wrap(function* reconnect() {
+      if (self._attempts >= self.WEBSOCKET_RECONNECT_MAX_ATTEMPTS) {
         return false;
       }
 
       self._attempts++;
       if (self.isServer) {
-
-        QueueWebSocket.portInUse(self.WEBSOCKET_PORT, co.wrap(function* (err, res) {
+        QueueWebSocket.portInUse(self.WEBSOCKET_PORT,
+        co.wrap(function* portInUse(err, res) {
           if (res === false) {
             yield self.connect();
           } else {
             timeout = setTimeout(cb, self.WEBSOCKET_RECONNECT_TIMEOUT);
           }
-        }))
+        }));
       } else {
         const supervisor = new WebSocket(self.address);
 
-        supervisor.on('error', () => {
-          timeout = setTimeout(cb, self.WEBSOCKET_RECONNECT_TIMEOUT);
-        });
-
-        supervisor.on('open', co.wrap(function* () {
+        supervisor.on('open', co.wrap(function* open() {
           supervisor.close();
 
           yield self.connect();
 
           // Client queue is reconnecting with topics:
-          for (const topic in ws._topics) {
-            const callbacks = ws._topics[topic];
-            for (const i in callbacks) {
-              self.removeListener(topic, callbacks[i]);
-              self.on(topic, callbacks[i]);
+          for (const topic in ws._topics) { // eslint-disable-line no-restricted-syntax
+            if (ws._topics.hasOwnProperty(topic)) {
+              const callbacks = ws._topics[topic];
+              for (const i in callbacks) { // eslint-disable-line no-restricted-syntax
+                if (callbacks.hasOwnProperty(i)) {
+                  self.removeListener(topic, callbacks[i]);
+                  self.on(topic, callbacks[i]);
+                }
+              }
             }
           }
-
-        }))
+        }));
       }
+
+      return true;
     });
 
-    let timeout = setTimeout(cb, self.WEBSOCKET_RECONNECT_TIMEOUT);
+    timeout = setTimeout(cb, self.WEBSOCKET_RECONNECT_TIMEOUT);
 
     return this;
   }
@@ -299,33 +312,41 @@ class QueueWebSocket extends Queue {
    */
   connectServer() {
     const self = this;
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       self.ws = new WebSocketServer({ port: self.WEBSOCKET_PORT });
       self.ws.queue = self;
+      self._connectionsIndex = 0;
 
-      self.ws.on('error', self.onClose);
+      // self.ws.on('error', self.onClose);
       self.ws.on('connection', ws => {
-        ws.queue = self;
-        ws._topics = [];
+        ws.uuid = uuid(); // eslint-disable-line no-param-reassign
+        ws.queue = self; // eslint-disable-line no-param-reassign
+        ws._topics = []; // eslint-disable-line no-param-reassign
+        ws.on('close', () => {
+          delete self.connections[ws.uuid];
+        });
         ws.on('message', self.onMessage);
-        // ws.on('close', this.onClose);
+        // ws.on('close', self.onClose);
+        self.connections[ws.uuid] = ws;
       });
+
       resolve(true);
 
       self._supervisor = new WebSocket(self.address);
+      self._supervisor.supervisor = true;
       self._supervisor.queue = self;
       self._supervisor._topics = [];
 
       self._supervisor.on('open', () => {
+        self._supervisor.on('error', self.onClose);
         self._supervisor.on('close', self.onClose);
       });
     });
-
   }
 
   connectClient() {
     const self = this;
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       self.ws = new WebSocket(self.address);
       self.ws.queue = self;
       self.ws._topics = {};
@@ -345,7 +366,6 @@ class QueueWebSocket extends Queue {
    * @return {Promise} - True when connected
    */
   connect() {
-    const self = this;
     if (this.isServer) {
       return this.connectServer();
     }
@@ -358,14 +378,14 @@ class QueueWebSocket extends Queue {
    *
    * @return {QueueWebSocket} - The queue on which to emit the message
    */
-  emit(topic) {
-    const args = Array.from(arguments).slice(1); // eslint-disable-line prefer-rest-params
+  emit(topic, ...args) {
+    // const args = Array.from(arguments).slice(1); // eslint-disable-line prefer-rest-params
     const msg = JSON.stringify({
-      topic, args
+      topic, args,
     });
     if (this.isServer) {
       this.broadcast(msg, topic);
-      super.emit.apply(this, arguments);
+      super.emit.apply(this, args);
     } else {
       this.ws.send(msg, { mask: true });
     }
@@ -375,7 +395,7 @@ class QueueWebSocket extends Queue {
 
   subscribe(topic) {
     this.ws.send(JSON.stringify({
-      subscribe: topic
+      subscribe: topic,
     }), { mask: true });
     return this;
   }
@@ -394,19 +414,27 @@ class QueueWebSocket extends Queue {
       this.ws._topics[topic].push(func);
 
       // Send Websocket message to bind on specific message only.
+
       this.subscribe(topic);
     }
     return this;
   }
 
-  static portInUse (port, callback) {
+  /**
+   * Detect whether the port is in use.
+   *
+   * @static
+   * @param {number} port to test
+   * @param {Callback} callback
+   */
+  static portInUse(port, callback) {
     const server = net.createServer();
 
     server.listen(port, '127.0.0.1');
-    server.on('error', function (e) {
-      callback(null, true);
+    server.on('error', error => {
+      callback(error, true);
     });
-    server.on('listening', function (e) {
+    server.on('listening', () => {
       server.close();
       callback(null, false);
     });
