@@ -12,7 +12,7 @@ class MyClass extends Entity {
   }
 }
 
-describe.only('Entity', () => {
+describe('Entity', () => {
   describe('Interface', () => {
     it('extends the EventEmitter', () => {
       const entity = new Entity();
@@ -23,18 +23,18 @@ describe.only('Entity', () => {
   describe('when managing snapshots', () => {
     it('initializes snapshot successfully', () => {
       const Alice = new MyClass();
-      expect(Alice._snapshot).to.deep.equal({ x:0, _version: 0 });
+      expect(Alice._snapshot).to.deep.equal({ x: 0, _version: 0 });
     });
     it('freezes snapshot successfully', () => {
       const Alice = new MyClass();
       Alice._snapshot.x = 1;
-      expect(Alice._snapshot).to.deep.equal({ x:0, _version: 0 });
+      expect(Alice._snapshot).to.deep.equal({ x: 0, _version: 0 });
     });
     it('builds snapshot successfully', () => {
       const Alice = new MyClass();
       Alice.incrementX();
       Alice.buildSnapshot();
-      expect(Alice._snapshot).to.deep.equal({ x:1, _version: 1 });
+      expect(Alice._snapshot).to.deep.equal({ x: 1, _version: 1 });
     });
   });
 
