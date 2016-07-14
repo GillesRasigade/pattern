@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Validator - Documentation</title>
+    <title>QueueRedis - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Validator</h1>
+    <h1 class="page-title">QueueRedis</h1>
     
 
     
@@ -41,8 +41,10 @@
 <header>
     
         <h2>
-        Validator
+        QueueRedis
         </h2>
+        
+            <div class="class-description"><p>Queue over Redis</p></div>
         
     
 </header>
@@ -53,16 +55,15 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
-    <h4 class="name" id="Validator"><span class="type-signature"></span>new Validator<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="QueueRedis"><span class="type-signature"></span>new QueueRedis<span class="signature">(options)</span><span class="type-signature"></span></h4>
 
     
 
 
 
-<div class="description">
-    <p>Validator a Javascript against a JSON Schema thanks to tv4 module.</p>
-</div>
 
 
 
@@ -70,6 +71,106 @@
 
 
 
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Queue configuration</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Redis database URL</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -105,7 +206,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line5">line 5</a>
+        <a href="Queue_QueueRedis.js.html">Queue/QueueRedis.js</a>, <a href="Queue_QueueRedis.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -115,7 +216,11 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="https://github.com/geraintluff/tv4">https://github.com/geraintluff/tv4</a></li>
+            <li><a href="Queue.html">Queue</a></li>
+        
+            <li><a href="https://github.com/antirez/redis">https://github.com/antirez/redis</a></li>
+        
+            <li><a href="global.html#REDISCLOUD_URL">REDISCLOUD_URL</a></li>
         </ul>
     </dd>
     
@@ -135,6 +240,22 @@
 
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const QueueRedis = require('QueueRedis');
+
+const queue = new QueueRedis({ url: true });
+
+queue
+.connect()
+.then(() => {
+  queue.on('task', message => {
+    console.log(message);
+  });
+  queue.emit('task', 'A coffee please !');
+});</code></pre>
 
 
 
@@ -161,14 +282,14 @@
 
     
 
-    <h4 class="name" id="addSchema"><span class="type-signature"></span>addSchema<span class="signature">(obj, path<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="close"><span class="type-signature"></span>close<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="QueueRedis.html">QueueRedis</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Add a Schema definition for a specific object.</p>
+    <p>Close the RX / TX channels.</p>
 </div>
 
 
@@ -177,98 +298,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Object to attache to definition on</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Path to the JSON Schema definition</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -304,7 +333,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line64">line 64</a>
+        <a href="Queue_QueueRedis.js.html">Queue/QueueRedis.js</a>, <a href="Queue_QueueRedis.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -332,7 +361,7 @@
         
 <div class="param-desc">
     <ul>
-<li>JSON Schema definition</li>
+<li>The queue to be closed</li>
 </ul>
 </div>
 
@@ -344,7 +373,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type"><a href="QueueRedis.html">QueueRedis</a></span>
 
 
     </dd>
@@ -359,14 +388,14 @@
 
     
 
-    <h4 class="name" id="getClassName"><span class="type-signature"></span>getClassName<span class="signature">(obj)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    <h4 class="name" id="connect"><span class="type-signature"></span>connect<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Get the className from an object.</p>
+    <p>Connect the Redis queue.</p>
 </div>
 
 
@@ -375,58 +404,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-|
-
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Object or string</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -462,7 +439,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line91">line 91</a>
+        <a href="Queue_QueueRedis.js.html">Queue/QueueRedis.js</a>, <a href="Queue_QueueRedis.js.html#line58">line 58</a>
     </li></ul></dd>
     
 
@@ -490,7 +467,7 @@
         
 <div class="param-desc">
     <ul>
-<li>Name of the constructor</li>
+<li>True when connected</li>
 </ul>
 </div>
 
@@ -502,7 +479,7 @@
     </dt>
     <dd>
         
-<span class="param-type">String</span>
+<span class="param-type">Promise</span>
 
 
     </dd>
@@ -517,14 +494,14 @@
 
     
 
-    <h4 class="name" id="getSchema"><span class="type-signature"></span>getSchema<span class="signature">(obj)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="emit"><span class="type-signature"></span>emit<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="QueueRedis.html">QueueRedis</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Get the JSON Schema definition from the object given as input parameter.</p>
+    <p>Emit a new message to the queue.</p>
 </div>
 
 
@@ -533,55 +510,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Object to search a JSON Schema for</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -617,7 +545,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line49">line 49</a>
+        <a href="Queue_QueueRedis.js.html">Queue/QueueRedis.js</a>, <a href="Queue_QueueRedis.js.html#line83">line 83</a>
     </li></ul></dd>
     
 
@@ -645,7 +573,7 @@
         
 <div class="param-desc">
     <ul>
-<li>JSON Schema definition</li>
+<li>The queue to be closed</li>
 </ul>
 </div>
 
@@ -657,7 +585,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type"><a href="QueueRedis.html">QueueRedis</a></span>
 
 
     </dd>
@@ -672,14 +600,14 @@
 
     
 
-    <h4 class="name" id="isValid"><span class="type-signature"></span>isValid<span class="signature">(obj)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    <h4 class="name" id="on"><span class="type-signature"></span>on<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="QueueRedis.html">QueueRedis</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Check if the object is valid against its JSON Schema definition.</p>
+    <p>Listen to new messages emitted from the queue.</p>
 </div>
 
 
@@ -688,55 +616,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Object with toJSON() implemented</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -772,7 +651,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line25">line 25</a>
+        <a href="Queue_QueueRedis.js.html">Queue/QueueRedis.js</a>, <a href="Queue_QueueRedis.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -800,7 +679,7 @@
         
 <div class="param-desc">
     <ul>
-<li>True if valid, False otherwise</li>
+<li>The queue to be closed</li>
 </ul>
 </div>
 
@@ -812,7 +691,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Boolean</span>
+<span class="param-type"><a href="QueueRedis.html">QueueRedis</a></span>
 
 
     </dd>

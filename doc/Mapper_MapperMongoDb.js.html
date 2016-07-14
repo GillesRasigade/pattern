@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>Mapper/MapperMongoDb.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,74 +28,204 @@
 
 <div id="main">
     
+    <h1 class="page-title">Mapper/MapperMongoDb.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 
+const mongodb = require('mongodb');
+const co = require('co');
 
+const Mapper = require('./Mapper');
 
+/**
+ * MongoDb mapper
+ *
+ * @alias MapperMongoDb
+ * @constructor
+ *
+ * @see Mapper
+ *
+ * @param {Object} options - Queue configuration
+ * @param {String} [options.url=mongodb://localhost:27017/test] - AMQP Read Channel URL
+ *
+ * @example
+ *
+ * // Require the mapper class:
+ * const MapperMongoDb = require('MapperMongoDb');
+ *
+ * // Instanciate the mapper with default values:
+ * const mapper = new MapperMongoDb();
+ *
+ * // Connect the database:
+ * yield mapper.connect();
+ *
+ * // Perform tasks such as loading objects:
+ * const user = mapper.getObject(_id, User);
+ */
+class MapperMongoDb extends Mapper {
+  constructor(options) {
+    super(options);
 
+    // Set the default database connection:
+    this.options.url = this.options.url || 'mongodb://localhost:27017/test';
+  }
 
+  /**
+   * Connect the database
+   *
+   * @return {MapperMongoDb} - The database mapper
+   */
+  * connect() {
+    this.connection = yield mongodb.connect(this.options.url);
+    return this;
+  }
 
+  /**
+   * Close the database
+   *
+   * @return {MapperMongoDb} - The database mapper
+   */
+  * close() {
+    if (this.connection) {
+      this.connection.close();
+    }
+    this.connection = null;
+    return this;
+  }
 
+  /**
+   * Retrieve the object collection name from the object given in parameter, the
+   * constructor or prototype.
+   *
+   * @return {String} - The collection name
+   */
+  getObjectCollectionName(obj) {
+    // Get the constructor name:
+    let name = null;
+    if (typeof obj === 'string') {
+      name = obj;
+    }
+    if (!name &amp;&amp; obj.constructor
+      &amp;&amp; typeof obj.constructor.prototype.collection === 'function') {
+      name = obj.constructor.prototype.collection();
+    }
+    if (!name &amp;&amp; obj.prototype &amp;&amp; obj.prototype.constructor.name) {
+      name = obj.prototype.constructor.name.toLowerCase();
+    }
+    if (!name) {
+      name = obj.constructor.name.toLowerCase();
+    }
+    return name;
+  }
 
+  /**
+   * Retrieve the object collection.
+   *
+   * @return {Object} - The collection for this object
+   */
+  getObjectCollection(obj) {
+    return this.connection.collection(
+      this.getObjectCollectionName(obj)
+    );
+  }
 
-    
+  /**
+   * Save an object to the mongoDb database.
+   *
+   * @param {Object} - Object to persist to the database
+   * @return {Object} - New instance of the object
+   */
+  saveObject(obj) {
+    const self = this;
+    return co(function* saveObject() {
+      // Get the object data:
+      const data = obj.toJSON();
 
+      // Map the Mongodb _id to ObjectId:
+      if (typeof data._id === 'string') {
+        data._id = mongodb.ObjectId(data._id); // eslint-disable-line new-cap
+      }
 
-    <section class="readme">
-        <article><h1>{pattern}</h1><p><a href="https://badge.fury.io/js/%40gilles.rasigade%2Fpattern"><img src="https://badge.fury.io/js/%40gilles.rasigade%2Fpattern.svg" alt="npm version"></a> <a href="https://travis-ci.org/GillesRasigade/pattern"><img src="https://travis-ci.org/GillesRasigade/pattern.svg?branch=master" alt="Build Status"></a> <a href="https://codeclimate.com/github/GillesRasigade/pattern/coverage"><img src="https://codeclimate.com/github/GillesRasigade/pattern/badges/coverage.svg" alt="Test Coverage"></a> <a href="https://codeclimate.com/github/GillesRasigade/pattern"><img src="https://codeclimate.com/github/GillesRasigade/pattern/badges/gpa.svg" alt="Code Climate"></a> <a href="http://pattern.readthedocs.org/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/pattern/badge/?version=latest" alt="Documentation Status"></a> <a href="https://david-dm.org/GillesRasigade/pattern.svg"><img src="https://david-dm.org/GillesRasigade/pattern.svg" alt="npm dependencies"></a></p>
-<p>Useful patterns for NodeJS development</p>
-<h2>Roadmap</h2><h3>Validator</h3><p>A Validator is a component validating a data against a schema. Currently the only
-Validator available is for JSON data and JSON Schema definition.</p>
-<ul>
-<li>[x] JSON Schema</li>
-<li>[ ] Date</li>
-<li>[ ] Number</li>
-</ul>
-<h3>Queues</h3><p>Queues are based on the Interface of EventEmitter where a message can be routed
-to one or several suscribers. Different technologies can be used to distribute
-message: EventEmitter, AMQP, WebSocket. By combining all these three approaches
-a message can transit from a browser to another browser in a fully scalable and
-distributed manner.</p>
-<ul>
-<li>[x] EventEmitter</li>
-<li>[x] AMQP</li>
-<li>[x] WebSocket</li>
-</ul>
-<h3>Mappers</h3><p>Mappers are responsible of the Extract (E) and Load (L) parts from the ETL stack.
-From a given object definition, she is able to load data from a specific data
-source and persists it in.</p>
-<ul>
-<li>[x] MongoDb</li>
-<li>[ ] Swagger API</li>
-<li>[ ] Mock</li>
-<li>[ ] Redis</li>
-<li>[ ] PostgreSQL</li>
-</ul>
-<h3>Entity</h3><p>An Entity is a Domain Model object embedding a business logic. She is persisted
-thanks to the Mapper components.</p>
-<ul>
-<li>[ ] Entity</li>
-</ul>
-<h3>Localization</h3><p>Component responsible of the localization of strings, currencies, date, etc.</p>
-<h3>Logger</h3><p>Logger component</p>
-<h3>Under consideration</h3><h2>Getting started</h2><h3>Installation</h3><pre class="prettyprint source lang-bash"><code>npm install -S @gilles.rasigade/pattern</code></pre><h3>Require</h3><pre class="prettyprint source lang-js"><code>const pattern = require('@gilles.rasigade/pattern');</code></pre><h3>Documentation</h3><p>You can find the documentation of the project at the following url:
-http://gillesrasigade.github.io/pattern/doc/index.html</p>
-<h2>Contribute</h2><h3>Clone and build the code</h3><pre class="prettyprint source lang-bash"><code>git clone git@github.com:GillesRasigade/pattern.git
-cd pattern
-npm build</code></pre><h3>Build</h3><p>The <code>build</code> npm command will install all dependencies required for the development
-environment, execute tests to validate the installation then generate documentation
-for the project.</p>
-<p>To build the project, please execute the following command:</p>
-<pre class="prettyprint source lang-bash"><code>npm run build</code></pre><h3>Documentation</h3><p>The project documentation is available after the build process in the folder
-<code>./doc/pattern/index.html</code></p></article>
+      // Save the object to the database:
+      yield self
+        .getObjectCollection(obj)
+        .save(data);
+
+      // Map reverse type:
+      data._id = data._id.toString();
+
+      // Return a new instance of the object:
+      return new obj.constructor(data);
+    });
+  }
+
+  /**
+   * Load an object from the mongoDb database.
+   *
+   * @param {String|ObjectId} _id - Object _id to search for
+   * @param {Contructor} constructor - Constructor to use to instanciate the
+   *                                   object
+   * @return {Object} - Instance
+   */
+  getObject(_id, constructor) {
+    const self = this;
+    return co(function* getObject() {
+      let objectId = _id;
+      // Map the Mongodb _id to ObjectId:
+      if (typeof objectId === 'string') {
+        objectId = mongodb.ObjectId(objectId);// eslint-disable-line new-cap
+      }
+      // Save the object to the database:
+      const data = yield self
+        .getObjectCollection(constructor)
+        .findOne({ _id: objectId });
+
+      if (data === null) {
+        return null;
+      }
+
+      // @refactor
+      data._id = data._id.toString();
+
+      // Return a new instance of the object:
+      return new constructor(data);
+    });
+  }
+
+  /**
+   * Remove an object from the mongoDb database.
+   *
+   * @param {Object} - Object to delete from the database
+   * @return {Object} - Instance
+   */
+  deleteObject(obj) {
+    const self = this;
+    return co(function* deleteObject() {
+      const data = obj.toJSON();
+      // Map the Mongodb _id to ObjectId:
+      data._id = mongodb.ObjectId(data._id); // eslint-disable-line new-cap
+      // Save the object to the database:
+      yield self
+        .getObjectCollection(obj)
+        .remove({ _id: data._id });
+      // Return a new instance of the object:
+      return obj;
+    });
+  }
+}
+
+module.exports = MapperMongoDb;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 

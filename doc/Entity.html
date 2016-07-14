@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Validator - Documentation</title>
+    <title>Entity - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Validator</h1>
+    <h1 class="page-title">Entity</h1>
     
 
     
@@ -41,8 +41,10 @@
 <header>
     
         <h2>
-        Validator
+        Entity
         </h2>
+        
+            <div class="class-description"><p>Creates an instance of Entity.</p></div>
         
     
 </header>
@@ -53,15 +55,240 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
-    <h4 class="name" id="Validator"><span class="type-signature"></span>new Validator<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Entity"><span class="type-signature"></span>new Entity<span class="signature">(snapshot<span class="signature-attributes">opt</span>, events<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>snapshot</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>events</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    []
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Entity_Entity.js.html">Entity/Entity.js</a>, <a href="Entity_Entity.js.html#line31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>class Person extends Entity {
+  constructor(data = { name: 'unknown' }) {
+    super(data);
+  }
+  setName(name) {
+    this.push('setName', name);
+    this.data.name = name;
+  }
+}
+
+const alice = new Person();
+alice.setName('Alice');
+
+console.log(alice);</code></pre>
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="buildSnapshot"><span class="type-signature"></span>buildSnapshot<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Entity.html">Entity</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Validator a Javascript against a JSON Schema thanks to tv4 module.</p>
+    <p>Build a new entity snapshot based on current entity data and reset events
+stack.</p>
 </div>
 
 
@@ -105,19 +332,12 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line5">line 5</a>
+        <a href="Entity_Entity.js.html">Entity/Entity.js</a>, <a href="Entity_Entity.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://github.com/geraintluff/tv4">https://github.com/geraintluff/tv4</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -135,40 +355,40 @@
 
 
 
+<h5>Returns:</h5>
+
+        
 
 
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Entity.html">Entity</a></span>
+
+
+    </dd>
+</dl>
 
     
-    </div>
 
-    
 
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
 
         
             
 
     
 
-    <h4 class="name" id="addSchema"><span class="type-signature"></span>addSchema<span class="signature">(obj, path<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="init"><span class="type-signature"></span>init<span class="signature">(snapshot<span class="signature-attributes">opt</span>, events<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="Entity.html">Entity</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Add a Schema definition for a specific object.</p>
+    <p>Initializes the entity with the given snapshot and events stack.</p>
 </div>
 
 
@@ -196,6 +416,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -206,44 +428,13 @@
 
         <tr>
             
-                <td class="name"><code>obj</code></td>
+                <td class="name"><code>snapshot</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Object to attache to definition on</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
 
 
             
@@ -262,8 +453,53 @@
             
 
             
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
 
-            <td class="description last"><p>Path to the JSON Schema definition</p></td>
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>events</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    []
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -304,7 +540,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line64">line 64</a>
+        <a href="Entity_Entity.js.html">Entity/Entity.js</a>, <a href="Entity_Entity.js.html#line45">line 45</a>
     </li></ul></dd>
     
 
@@ -330,12 +566,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <ul>
-<li>JSON Schema definition</li>
-</ul>
-</div>
-
 
 
 <dl class="param-type">
@@ -344,7 +574,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type"><a href="Entity.html">Entity</a></span>
 
 
     </dd>
@@ -359,14 +589,14 @@
 
     
 
-    <h4 class="name" id="getClassName"><span class="type-signature"></span>getClassName<span class="signature">(obj)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    <h4 class="name" id="push"><span class="type-signature"></span>push<span class="signature">(method, args<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="Entity.html">Entity</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Get the className from an object.</p>
+    <p>Push a new event to the entity stack.</p>
 </div>
 
 
@@ -390,7 +620,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -402,26 +636,74 @@
 
         <tr>
             
-                <td class="name"><code>obj</code></td>
+                <td class="name"><code>method</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">String</span>
-|
-
-<span class="param-type">Object</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Object or string</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The method to be called on replay</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    []
+                
+                </td>
+            
+
+            <td class="description last"><p>Arguments to apply the function on</p></td>
         </tr>
 
     
@@ -462,7 +744,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line91">line 91</a>
+        <a href="Entity_Entity.js.html">Entity/Entity.js</a>, <a href="Entity_Entity.js.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -488,12 +770,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <ul>
-<li>Name of the constructor</li>
-</ul>
-</div>
-
 
 
 <dl class="param-type">
@@ -502,7 +778,7 @@
     </dt>
     <dd>
         
-<span class="param-type">String</span>
+<span class="param-type"><a href="Entity.html">Entity</a></span>
 
 
     </dd>
@@ -517,14 +793,114 @@
 
     
 
-    <h4 class="name" id="getSchema"><span class="type-signature"></span>getSchema<span class="signature">(obj)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="replay"><span class="type-signature"></span>replay<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Entity.html">Entity</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Get the JSON Schema definition from the object given as input parameter.</p>
+    <p>Replay the current events stack from entity snapsho.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Entity_Entity.js.html">Entity/Entity.js</a>, <a href="Entity_Entity.js.html#line114">line 114</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Entity.html">Entity</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setEvents"><span class="type-signature"></span>setEvents<span class="signature">(events<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="Entity.html">Entity</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Set the events to the current entity.</p>
 </div>
 
 
@@ -548,7 +924,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -560,23 +940,39 @@
 
         <tr>
             
-                <td class="name"><code>obj</code></td>
+                <td class="name"><code>events</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Array</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Object to search a JSON Schema for</p></td>
+            
+                <td class="default">
+                
+                    []
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -617,7 +1013,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line49">line 49</a>
+        <a href="Entity_Entity.js.html">Entity/Entity.js</a>, <a href="Entity_Entity.js.html#line74">line 74</a>
     </li></ul></dd>
     
 
@@ -643,12 +1039,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <ul>
-<li>JSON Schema definition</li>
-</ul>
-</div>
-
 
 
 <dl class="param-type">
@@ -657,7 +1047,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type"><a href="Entity.html">Entity</a></span>
 
 
     </dd>
@@ -672,14 +1062,14 @@
 
     
 
-    <h4 class="name" id="isValid"><span class="type-signature"></span>isValid<span class="signature">(obj)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    <h4 class="name" id="setSnapshot"><span class="type-signature"></span>setSnapshot<span class="signature">(snapshot<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="Entity.html">Entity</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Check if the object is valid against its JSON Schema definition.</p>
+    <p>Set the snapshot to the current entity.</p>
 </div>
 
 
@@ -703,7 +1093,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -715,7 +1109,7 @@
 
         <tr>
             
-                <td class="name"><code>obj</code></td>
+                <td class="name"><code>snapshot</code></td>
             
 
             <td class="type">
@@ -728,10 +1122,26 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Object with toJSON() implemented</p></td>
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -772,7 +1182,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Validator_Validator.js.html">Validator/Validator.js</a>, <a href="Validator_Validator.js.html#line25">line 25</a>
+        <a href="Entity_Entity.js.html">Entity/Entity.js</a>, <a href="Entity_Entity.js.html#line60">line 60</a>
     </li></ul></dd>
     
 
@@ -798,12 +1208,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <ul>
-<li>True if valid, False otherwise</li>
-</ul>
-</div>
-
 
 
 <dl class="param-type">
@@ -812,7 +1216,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Boolean</span>
+<span class="param-type"><a href="Entity.html">Entity</a></span>
 
 
     </dd>
