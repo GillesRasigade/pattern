@@ -2,13 +2,33 @@
 
 const EventEmitter = require('events').EventEmitter;
 
-module.exports = class Entity extends EventEmitter {
-  /**
-   * Creates an instance of Entity.
-   *
-   * @param {Object} [snapshot={}]
-   * @param {Array} [events=[]]
-   */
+/**
+ * Creates an instance of Entity.
+ *
+ * @alias Entity
+ * @constructor
+ *
+ * @param {Object} [snapshot={}]
+ * @param {Array} [events=[]]
+ *
+ * @example
+ *
+ * class Person extends Entity {
+ *   constructor(data = { name: 'unknown' }) {
+ *     super(data);
+ *   }
+ *   setName(name) {
+ *     this.push('setName', name);
+ *     this.data.name = name;
+ *   }
+ * }
+ *
+ * const alice = new Person();
+ * alice.setName('Alice');
+ *
+ * console.log(alice);
+ */
+class Entity extends EventEmitter {
   constructor(snapshot = {}, events = []) {
     super();
 
@@ -75,11 +95,13 @@ module.exports = class Entity extends EventEmitter {
    */
   push(method, args = []) {
     if (!this._replaying) {
-      this._events.push({
+      const event = {
         method, args,
         timestamp: Date.now(),
         version: ++this._version,
-      });
+      };
+      this._events.push(event);
+      this.emit('pushed', event);
     }
 
     return this;
@@ -107,4 +129,6 @@ module.exports = class Entity extends EventEmitter {
 
     return this;
   }
-};
+}
+
+module.exports = Entity;
