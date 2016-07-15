@@ -5,7 +5,7 @@ const EventEmitter = require('events').EventEmitter;
 /**
  * Creates an instance of Entity.
  *
- * @alias Entity
+ * @alias EventSourcing
  * @constructor
  *
  * @param {Object} [snapshot={}]
@@ -13,7 +13,7 @@ const EventEmitter = require('events').EventEmitter;
  *
  * @example
  *
- * class Person extends Entity {
+ * class Person extends EventSourcing {
  *   constructor(data = { name: 'unknown' }) {
  *     super(data);
  *   }
@@ -28,7 +28,7 @@ const EventEmitter = require('events').EventEmitter;
  *
  * console.log(alice);
  */
-class Entity extends EventEmitter {
+class EventSourcing extends EventEmitter {
   constructor(snapshot = {}, events = []) {
     super();
 
@@ -40,7 +40,7 @@ class Entity extends EventEmitter {
    *
    * @param {Object} [snapshot={}]
    * @param {Array} [events=[]]
-   * @returns {Entity}
+   * @returns {EventSourcing}
    */
   init(snapshot = {}, events = []) {
     this.setEvents(events);
@@ -55,7 +55,7 @@ class Entity extends EventEmitter {
    * Set the snapshot to the current entity.
    *
    * @param {Object} [snapshot={}]
-   * @returns {Entity}
+   * @returns {EventSourcing}
    */
   setSnapshot(snapshot = {}) {
     this._snapshot = Object.assign({
@@ -69,17 +69,17 @@ class Entity extends EventEmitter {
    * Set the events to the current entity.
    *
    * @param {Array} [events=[]]
-   * @returns {Entity}
+   * @returns {EventSourcing}
    */
   setEvents(events = []) {
     this._events = events;
     return this;
   }
   /**
-   * Build a new entity snapshot based on current entity data and reset events
+   * Build a new entity snapœshot based on current entity data and reset events
    * stack.
    *
-   * @returns {Entity}
+   * @returns {EventSourcing}
    */
   buildSnapshot() {
     return this
@@ -88,10 +88,10 @@ class Entity extends EventEmitter {
   }
   /**
    * Push a new event to the entity stack.
-   *
+   *œ
    * @param {String} method The method to be called on replay
    * @param {Array} [args=[]] Arguments to apply the function on
-   * @returns {Entity}
+   * @returns {EventSourcing}
    */
   push(method, args = []) {
     if (!this._replaying) {
@@ -107,9 +107,9 @@ class Entity extends EventEmitter {
     return this;
   }
   /**
-   * Replay the current events stack from entity snapsho.
+   * Replay the current events stack from entity snapshop.
    *
-   * @returns {Entity}
+   * @returns {EventSourcing}
    */
   replay() {
     this._replaying = true;
@@ -131,4 +131,4 @@ class Entity extends EventEmitter {
   }
 }
 
-module.exports = Entity;
+module.exports = EventSourcing;

@@ -1,8 +1,8 @@
-const Entity = require('../../src/Entity/Entity');
+const EventSourcing = require('../../src/EventSourcing/EventSourcing');
 
 const EventEmitter = require('events').EventEmitter;
 
-class MyClass extends Entity {
+class MyClass extends EventSourcing {
   constructor(data = { x: 0 }) {
     super(data);
   }
@@ -12,10 +12,10 @@ class MyClass extends Entity {
   }
 }
 
-describe('Entity', () => {
+describe('EventSourcing', () => {
   describe('Interface', () => {
     it('extends the EventEmitter', () => {
-      const entity = new Entity();
+      const entity = new EventSourcing();
       expect(entity).to.be.instanceof(EventEmitter);
     });
   });
