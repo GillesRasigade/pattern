@@ -1,4 +1,5 @@
 const Entity = require('../../src/Entity/Entity');
+const Errors = require('../../src/Entity/Errors');
 
 describe('Entity', () => {
   const PERSON_SCHEMA = Object.freeze({
@@ -62,6 +63,16 @@ describe('Entity', () => {
         zipcode: '75001',
       });
     });
+    it('does not redefine getters and setters for properties in schema', () => {
+      class Person2 extends Entity {
+        get firstname() {
+          return 'ok';
+        }
+      }
+      Person2.SCHEMA = PERSON_SCHEMA;
+      const alice = new Person2();
+      expect(alice.firstname).to.be.equal('ok');
+    });
   });
   describe('commands and event sourcing', () => {
     it('register commands in the event sourcing events stack', () => {
@@ -105,5 +116,35 @@ describe('Entity', () => {
     // const bernard = new Person();
     // console.log(63, 'Replaying');
     // bernard.init(alice._snapshot, alice._events).replay();
+  });
+  describe('validation', () => {
+    it('validates entity against schema', () => {
+      const bernard = new Person();
+      expect(bernard.isValid()).to.be.eql(true);
+    });
+    it('invalidates entity against schema', () => {
+      const bernard = new Person({
+        firstname: 123,
+      });
+      expect(bernard.isValid()).to.be.eql(false);
+    });
+    it('validates entity without schema', () => {
+      class Void extends Entity {}
+      const _void = new Void();
+      _void.data.test = 1;
+      expect(_void.isValid()).to.be.eql(true);
+    });
+  });
+  describe('mutator', () => {
+    it('raises MutatorError if not redefined', () => {
+      const bernard = new Person();
+      expect(bernard.mutator).throws(Errors.MutatorError);
+    });
+  });
+  describe('accessor', () => {
+    it('raises AccessorError if not redefined', () => {
+      const bernard = new Person();
+      expect(bernard.accessor).throws(Errors.AccessorError);
+    });
   });
 });

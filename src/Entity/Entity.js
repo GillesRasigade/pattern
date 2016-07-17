@@ -65,12 +65,6 @@ class Entity extends EventSourcing {
     constructor.initialized = true;
   }
   /**
-   * Returns the Entity validator.
-   */
-  static getValidator() {
-    return entityValidator;
-  }
-  /**
    * Check whether the instance data is valid against schema.
    *
    * @returns {boolean}
@@ -88,8 +82,7 @@ class Entity extends EventSourcing {
     if (schema && schema.properties) {
        // eslint-disable-next-line no-restricted-syntax
       for (const key in schema.properties) {
-        if (schema.properties.hasOwnProperty(key)
-          && !constructor.prototype.hasOwnProperty(key)) {
+        if (!constructor.prototype.hasOwnProperty(key)) {
           Object.defineProperty(constructor.prototype, key, {
             // eslint-disable-next-line object-shorthand
             get: function get() {
