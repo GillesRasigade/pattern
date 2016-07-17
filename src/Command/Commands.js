@@ -77,7 +77,8 @@ class Commands {
     let result = null;
     // Get the last command from the history:
     if (this.history[this.index]) {
-      result = this.history[this.index].command.undo();
+      const command = this.history[this.index].command;
+      result = command.undo();
       this.index = this.index - 1;
     }
 
@@ -91,7 +92,8 @@ class Commands {
     let result = null;
     const index = this.index + 1;
     if (this.history[index]) {
-      result = this.history[index].command.execute();
+      const command = this.history[index].command;
+      result = command.execute();
       this.index = index;
     }
 
