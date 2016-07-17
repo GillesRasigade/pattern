@@ -68,6 +68,8 @@ class Validator {
     let schema = null;
     if (typeof path === 'string') {
       schema = require(path); // eslint-disable-line global-require
+    } else if (typeof path === 'object') {
+      schema = path;
     } else if (obj.hasOwnProperty('schema')) {
       schema = obj.schema;
     } else if (typeof obj.getValidationSchema === 'function') {
