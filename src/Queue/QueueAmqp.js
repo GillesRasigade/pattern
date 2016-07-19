@@ -113,11 +113,15 @@ class QueueAmqp extends Queue {
    *
    * @return {QueueAmqp} - The queue to be closed
    */
-  close() {
-    this.rxChannel.close();
-    this.txChannel.close();
-    this.rx.close.bind(this.rx);
-    this.tx.close.bind(this.tx);
+  close(callback) {
+    if (this.rxChannel) {
+      this.rxChannel.close();
+      this.rx.close.bind(this.rx, callback);
+    }
+    if (this.txChannel) {
+      this.txChannel.close();
+      this.tx.close.bind(this.tx, callback);
+    }
     return this;
   }
 
