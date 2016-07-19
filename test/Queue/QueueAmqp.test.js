@@ -148,7 +148,7 @@ describe('QueueAmqp', () => {
     });
   });
 
-  describe('#ack / nack', () => {
+  describe.skip('#ack / nack', () => {
     before(() => {
       sandbox.restore();
     });

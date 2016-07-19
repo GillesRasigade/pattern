@@ -11,25 +11,30 @@ const Command = require('./Command');
  *
  * @description
  *
- * Commands collection.
+ * Adding the commands capability to an object allows to access naturaly to the
+ * undo, redo pattern.
  *
  * @example
- * const a = { sum: 1 };
+ * const a = {
+ *   sum: 0,
+ *   incr() {
+ *     this.sum++;
+ *   },
+ *   decr() {
+ *     this.sum--;
+ *   }
+ * };
  *
- * const commands = new Commands();
+ * const commands = new pattern.Commands(a);
  *
- * commands.execute(
- *   (subject, inc) => subject.sum += inc,
- *   (subject, inc) => subject.sum -= inc,
- *   [a, 1]
- * );
- * // a.sum = 1;
+ * commands.execute('incr', [], 'decr', []);
+ * console.log(`a.sum = ${a.sum}`); // a.sum = 1;
  *
  * commands.undo();
- * // a.sum = 0;
+ * console.log(`a.sum = ${a.sum}`); // a.sum = 0;
  *
  * commands.redo();
- * // a.sum = 1;
+ * console.log(`a.sum = ${a.sum}`); // a.sum = 1;
  */
 class Commands {
   constructor(context = this, CommandConstructor = Command) {
@@ -61,6 +66,15 @@ class Commands {
 
   /**
    * Execute the given command
+   *
+   * @example
+   * // ...
+   * commands.execute('incr', [], 'decr', []);
+   *
+   * @param {String} execute Method to execute on the given context
+   * @param {Array} executeArguments List of arguments to apply on the method
+   * @param {String} [undo] Method to apply for undo
+   * @param {Array} [executeArguments] List of arguments to apply on the undo method
    */
   execute(execute, executeArguments, undo, undoArguments) {
     // Create the command to be executed:
@@ -75,7 +89,8 @@ class Commands {
   }
 
   /**
-   * Undo the last action
+   * Undo the last executed command if possible.
+   * @see Command#undo
    */
   undo() {
     let result = null;

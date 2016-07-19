@@ -61,10 +61,23 @@ class Command {
     }
   }
 
+  /**
+   * Is the command undoable.
+   *
+   * @returns {Boolean} True if undoable, false otherwise
+   */
   undoable() {
     return this._undoable;
   }
 
+  /**
+   * Apply the given function with arguments in the command context.
+   *
+   * @private
+   * @param {Function} method Function to call
+   * @param {Array} [args=[]] Arguments to apply on
+   * @returns {mixed}
+   */
   _apply(method, args = []) {
     if (typeof this._context.emit === 'function') {
       this._context.emit('execute', method, args);
@@ -75,13 +88,19 @@ class Command {
 
   /**
    * Execute the command function with the given arguments
+   *
+   * @returns {mixed}
    */
   execute() {
     return this._apply(this._execute, this._executeArguments);
   }
 
   /**
-   * Undo the command function
+   * Undo the command if possible.
+   *
+   * @see #undoable
+   * @exception {Error} Raises an exception if the command is not _undoable_
+   * @returns {mixed}
    */
   undo() {
     if (!this.undoable()) {
