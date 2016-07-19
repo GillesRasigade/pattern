@@ -34,7 +34,8 @@ const QUEUE_AMQP_CHANNEL_TYPES = {
 /**
  * Queue over AMQP
  *
- * @alias QueueAmqp
+ * @class QueueAmqp
+ * @extends {Queue}
  * @constructor
  *
  * @see Queue

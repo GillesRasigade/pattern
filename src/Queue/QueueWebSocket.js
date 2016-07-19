@@ -64,7 +64,8 @@ const WEBSOCKET_RECONNECT_MAX_ATTEMPTS = process.env.WEBSOCKET_RECONNECT_MAX_ATT
  *       must be propagated to each WebSocket as well.
  *       A solution can be to use QueueAmqp or QueueRedis for this.
  *
- * @alias QueueWebSocket
+ * @class QueueWebSocket
+ * @extends {Queue}
  * @constructor
  *
  * @see Queue

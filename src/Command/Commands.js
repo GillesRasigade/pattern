@@ -3,8 +3,15 @@
 const Command = require('./Command');
 
 /**
- * Commands collection.
  * @class Commands
+ * @constructor
+ *
+ * @param {Object} [context=this] Future commands execution context
+ * @param {Constructor} [CommandConstructor=Command] Constructor of the command
+ *
+ * @description
+ *
+ * Commands collection.
  *
  * @example
  * const a = { sum: 1 };
@@ -25,10 +32,7 @@ const Command = require('./Command');
  * // a.sum = 1;
  */
 class Commands {
-  /**
-   * @constructor
-   */
-  constructor(context, CommandConstructor = Command) {
+  constructor(context = this, CommandConstructor = Command) {
     // Store the commands context:
     this.context = context;
     this.Command = CommandConstructor;

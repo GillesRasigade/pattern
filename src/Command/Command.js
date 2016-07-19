@@ -3,9 +3,7 @@
 const assert = require('assert');
 
 /**
- * Undoable command.
  * @class Command
- *
  * @constructor
  *
  * @description
