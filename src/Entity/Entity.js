@@ -12,6 +12,13 @@ const Errors = require('./Errors');
 const entityValidator = new Validator();
 
 class Entity extends EventSourcing {
+  /**
+   * Creates an instance of Entity.
+   *
+   * @param {any} [data={}] The data to bind on
+   * @param {Validator} [validator=entityValidator] Entity validator which is
+   * responsible to answer yes or no to the question: isValid.
+   */
   constructor(data = {}, validator = entityValidator) {
     assert(new.target && new.target.name !== 'Entity',
       'Cannot construct Entity instance directly');

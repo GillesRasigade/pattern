@@ -10,6 +10,13 @@ class MyClass extends EventSourcing {
     this.push('incrementX');
     this.data.x++;
   }
+  *incrementXBy(increment = 1) {
+    this.push('incrementXBy', [increment]);
+    yield cb => {
+      this.data.x += increment;
+      cb();
+    };
+  }
 }
 
 describe('EventSourcing', () => {
@@ -75,6 +82,17 @@ describe('EventSourcing', () => {
 
       expect(Bernard._snapshot).to.deep.equal(Alice._snapshot);
       expect(Bernard.data).to.have.property('x', 1);
+    });
+    it('replays the game for generator functions', function* it() {
+      const Alice = new MyClass();
+      Alice.incrementX();
+      yield Alice.incrementXBy(1);
+
+      const Bernard = new MyClass();
+      yield Bernard.init(Alice._snapshot, Alice._sourcedEvents).replay();
+
+      expect(Bernard._snapshot).to.deep.equal(Alice._snapshot);
+      expect(Bernard.data).to.have.property('x', 2);
     });
     it('raises an exception if event method is not matching', function* it() {
       const Alice = new MyClass();

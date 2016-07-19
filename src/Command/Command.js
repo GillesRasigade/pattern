@@ -7,7 +7,7 @@ const assert = require('assert');
  * @class Command
  *
  * @constructor
- *u
+ *
  * @description
  * Undoable command
  *
