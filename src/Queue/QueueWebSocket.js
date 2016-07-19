@@ -199,13 +199,11 @@ class QueueWebSocket extends Queue {
 
     const self = this;
     // self.connections.forEach(connection => {
-    for (const i in self.connections) { // eslint-disable-line no-restricted-syntax
-      if (self.connections.hasOwnProperty(i)) {
-        const connection = self.connections[i];
-        const topics = connection._topics;
-        if (topics.indexOf(topic) !== -1) {
-          connection.send(message);
-        }
+    for (const i in self.connections) { // eslint-disable-line no-restricted-syntax, guard-for-in
+      const connection = self.connections[i];
+      const topics = connection._topics;
+      if (topics.indexOf(topic) !== -1) {
+        connection.send(message);
       }
     }
     return this;
@@ -276,15 +274,11 @@ class QueueWebSocket extends Queue {
           yield self.connect();
 
           // Client queue is reconnecting with topics:
-          for (const topic in ws._topics) { // eslint-disable-line no-restricted-syntax
-            if (ws._topics.hasOwnProperty(topic)) {
-              const callbacks = ws._topics[topic];
-              for (const i in callbacks) { // eslint-disable-line no-restricted-syntax
-                if (callbacks.hasOwnProperty(i)) {
-                  self.removeListener(topic, callbacks[i]);
-                  self.on(topic, callbacks[i]);
-                }
-              }
+          for (const topic in ws._topics) { // eslint-disable-line no-restricted-syntax, guard-for-in, max-len
+            const callbacks = ws._topics[topic];
+            for (const i in callbacks) { // eslint-disable-line no-restricted-syntax, guard-for-in, max-len
+              self.removeListener(topic, callbacks[i]);
+              self.on(topic, callbacks[i]);
             }
           }
         }));

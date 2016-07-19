@@ -11,6 +11,7 @@ const Errors = require('./Errors');
 
 const entityValidator = new Validator();
 
+
 class Entity extends EventSourcing {
   /**
    * Creates an instance of Entity.
