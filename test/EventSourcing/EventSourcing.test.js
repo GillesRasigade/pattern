@@ -23,33 +23,39 @@ describe('EventSourcing', () => {
   describe('when managing snapshots', () => {
     it('initializes snapshot successfully', () => {
       const Alice = new MyClass();
-      expect(Alice._snapshot).to.deep.equal({ x: 0, _version: 0 });
+      expect(Alice._snapshot).to.have.property('x', 0);
+      expect(Alice._snapshot).to.have.property('_version', 0);
+      expect(Alice._snapshot).to.have.property('_uuid');
     });
     it('freezes snapshot successfully', () => {
       const Alice = new MyClass();
       Alice._snapshot.x = 1;
-      expect(Alice._snapshot).to.deep.equal({ x: 0, _version: 0 });
+      expect(Alice._snapshot).to.have.property('x', 0);
+      expect(Alice._snapshot).to.have.property('_version', 0);
+      expect(Alice._snapshot).to.have.property('_uuid');
     });
     it('builds snapshot successfully', () => {
       const Alice = new MyClass();
       Alice.incrementX();
       Alice.buildSnapshot();
-      expect(Alice._snapshot).to.deep.equal({ x: 1, _version: 1 });
+      expect(Alice._snapshot).to.have.property('x', 1);
+      expect(Alice._snapshot).to.have.property('_version', 1);
+      expect(Alice._snapshot).to.have.property('_uuid');
     });
   });
 
   describe('when managing events', () => {
     it('initializes events successfully', () => {
       const Alice = new MyClass();
-      expect(Alice._events).to.deep.equal([]);
+      expect(Alice._sourcedEvents).to.deep.equal([]);
     });
     it('push event to the stack successfully', () => {
       const Alice = new MyClass();
       Alice.incrementX();
-      expect(Alice._events).to.be.an('array');
-      expect(Alice._events.length).to.be.eql(1);
+      expect(Alice._sourcedEvents).to.be.an('array');
+      expect(Alice._sourcedEvents.length).to.be.eql(1);
 
-      const event = Alice._events[0];
+      const event = Alice._sourcedEvents[0];
       expect(event).to.have.property('version', 1);
       expect(event).to.have.property('timestamp');
 
@@ -65,17 +71,18 @@ describe('EventSourcing', () => {
       Alice.incrementX();
 
       const Bernard = new MyClass();
-      Bernard.init(Alice._snapshot, Alice._events).replay();
+      Bernard.init(Alice._snapshot, Alice._sourcedEvents).replay();
 
       expect(Bernard._snapshot).to.deep.equal(Alice._snapshot);
-      expect(Bernard.data).to.deep.equal({ x: 1 });
+      expect(Bernard.data).to.have.property('x', 1);
     });
-    it('raises an exception if event method is not matching', () => {
+    it('raises an exception if event method is not matching', function* it() {
       const Alice = new MyClass();
       Alice.incrementX();
 
-      Alice._events[0].method = 'test';
-      expect(Alice.replay.bind(Alice)).to.throw(Error, 'test method not found');
+      Alice._sourcedEvents[0].method = 'test';
+      return expect(Alice.replay())
+        .to.be.rejectedWith(Error, 'test method not found');
     });
   });
 });

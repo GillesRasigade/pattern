@@ -34,45 +34,59 @@ class Command {
    * @param {Function} undo - function for undo
    * @param {Object} undoArguments - context of the command
    */
-  constructor(context, execute, executeArguments = [], undo, undoArguments = []) {
+  constructor(context, execute, executeArguments = [], undo = null, undoArguments = []) {
     this._context = context;
 
-    assert(typeof context[execute] === 'function',
+    assert(
+      typeof context[execute] === 'function' ||
+      typeof context.constructor[execute] === 'function',
       'Wrong input parameter: execute must be a valid function in context');
     assert(executeArguments instanceof Array,
       'Wrong input parameter: executeArguments must be an array');
-    assert(typeof context[undo] === 'function',
-      'Wrong input parameter: undo must be a valid function in context');
-    assert(undoArguments instanceof Array,
-      'Wrong input parameter: undoArguments must be an array');
 
     // Command execution standard workflow:
     this._execute = execute;
     this._executeArguments = executeArguments;
 
-    // Command undo workflow:
-    this._undo = undo;
-    this._undoArguments = undoArguments;
+    if (undo !== null) {
+      assert(typeof context[undo] === 'function',
+        'Wrong input parameter: undo must be a valid function in context');
+      assert(undoArguments instanceof Array,
+        'Wrong input parameter: undoArguments must be an array');
+
+      // Command undo workflow:
+      this._undo = undo;
+      this._undoArguments = undoArguments;
+      this._undoable = true;
+    } else {
+      this._undoable = false;
+    }
+  }
+
+  undoable() {
+    return this._undoable;
+  }
+
+  _apply(method, args = []) {
+    if (typeof this._context.emit === 'function') {
+      this._context.emit('execute', method, args);
+    }
+    const fn = this._context[method] || this._context.constructor[method];
+    return fn.apply(this._context, args);
   }
 
   /**
    * Execute the command function with the given arguments
    */
   execute() {
-    if (typeof this._context.emit === 'function') {
-      this._context.emit('execute', this._execute, this._executeArguments);
-    }
-    return this._context[this._execute].apply(this._context, this._executeArguments);
+    return this._apply(this._execute, this._executeArguments);
   }
 
   /**
    * Undo the command function
    */
   undo() {
-    if (typeof this._context.emit === 'function') {
-      this._context.emit('execute', this._undo, this._undoArguments);
-    }
-    return this._context[this._undo].apply(this._context, this._undoArguments);
+    return this._apply(this._undo, this._undoArguments);
   }
 }
 

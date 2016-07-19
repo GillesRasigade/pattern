@@ -28,9 +28,10 @@ class Commands {
   /**
    * @constructor
    */
-  constructor(context) {
+  constructor(context, CommandConstructor = Command) {
     // Store the commands context:
     this.context = context;
+    this.Command = CommandConstructor;
 
     // Initialize the empty history:
     this.history = [];
@@ -60,7 +61,7 @@ class Commands {
   execute(execute, executeArguments, undo, undoArguments) {
     // Create the command to be executed:
     const command = execute instanceof Command ?
-      execute : new Command(this.context, execute, executeArguments, undo, undoArguments);
+      execute : new this.Command(this.context, execute, executeArguments, undo, undoArguments);
 
     const result = command.execute();
 
@@ -78,6 +79,9 @@ class Commands {
     // Get the last command from the history:
     if (this.history[this.index]) {
       const command = this.history[this.index].command;
+      if (!command.undoable()) {
+        throw new Error('Last command is not undoable');
+      }
       result = command.undo();
       this.index = this.index - 1;
     }
@@ -98,6 +102,12 @@ class Commands {
     }
 
     return result;
+  }
+
+  last() {
+    if (this.history.length === 0) return null;
+
+    return this.history[this.history.length - 1];
   }
 }
 

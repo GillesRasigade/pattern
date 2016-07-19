@@ -1,6 +1,9 @@
 'use strict';
 
 const EventEmitter = require('events').EventEmitter;
+const co = require('co');
+const uuid = require('node-uuid');
+const jsonpatch = require('fast-json-patch');
 
 /**
  * Creates an instance of Entity.
@@ -60,8 +63,10 @@ class EventSourcing extends EventEmitter {
   setSnapshot(snapshot = {}) {
     this._snapshot = Object.assign({
       _version: this._version || 0,
+      _uuid: this._uuid || uuid(),
     }, snapshot);
     this._version = this._snapshot._version;
+    this._uuid = this._snapshot._uuid;
     Object.freeze(this._snapshot);
     return this;
   }
@@ -72,7 +77,7 @@ class EventSourcing extends EventEmitter {
    * @returns {EventSourcing}
    */
   setEvents(events = []) {
-    this._events = events;
+    this._sourcedEvents = [].concat(events);
     return this;
   }
   /**
@@ -82,9 +87,19 @@ class EventSourcing extends EventEmitter {
    * @returns {EventSourcing}
    */
   buildSnapshot() {
-    return this
+    const events = [].concat(this._sourcedEvents);
+    const patch = this.getPatch();
+    this
       .setSnapshot(this.data)
       .setEvents([]);
+
+    return {
+      _version: this._version,
+      _uuid: this._uuid,
+      snapshot: this._snapshot,
+      events,
+      patch,
+    };
   }
   /**
    * Push a new event to the entity stack.
@@ -100,8 +115,8 @@ class EventSourcing extends EventEmitter {
         timestamp: Date.now(),
         version: ++this._version,
       };
-      this._events.push(event);
-      this.emit('pushed', event);
+      this._sourcedEvents.push(event);
+      // this.emit('pushed', event);
     }
 
     return this;
@@ -112,22 +127,41 @@ class EventSourcing extends EventEmitter {
    * @returns {EventSourcing}
    */
   replay() {
-    this._replaying = true;
+    const self = this;
+    return co(function* replay() {
+      self._replaying = true;
 
-    this.init(this._snapshot, this._events);
+      self.init(self._snapshot, self._sourcedEvents);
 
-    for (const event of this._events) {
-      if (!(typeof this[event.method] === 'function')) {
-        throw new Error(`${event.method} method not found`);
+      for (const event of self._sourcedEvents) {
+        if (!(typeof self[event.method] === 'function')) {
+          throw new Error(`${event.method} method not found`);
+        }
+
+        const result = self[event.method].apply(self, event.args);
+        // @FIXME
+        if (result
+          && result.constructor
+          && result.constructor.constructor
+          && result.constructor.constructor.name === 'GeneratorFunction') {
+          yield result;
+        }
+        self._version = event.version;
       }
 
-      this[event.method].apply(this, event.args);
-      this._version = event.version;
-    }
+      self._replaying = false;
 
-    this._replaying = false;
-
-    return this;
+      return self;
+    });
+  }
+  toJSON() {
+    return Object.assign({
+      _version: this._version,
+      _uuid: this._uuid,
+    }, this.data);
+  }
+  getPatch(origin) {
+    return jsonpatch.compare(origin || this._snapshot, this.toJSON());
   }
 }
 

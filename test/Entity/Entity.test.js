@@ -75,28 +75,30 @@ describe('Entity', () => {
     });
   });
   describe('commands and event sourcing', () => {
-    it('register commands in the event sourcing events stack', () => {
+    it('register commands in the event sourcing events stack', function* it() {
       const bernard = new Person();
       bernard.commands.execute('setFirstname', ['Bernard'], 'setFirstname', [bernard.firstname]);
       expect(bernard).to.have.property('firstname', 'Bernard');
-      expect(bernard._events).to.have.property('length', 1);
+      expect(bernard._sourcedEvents).to.have.property('length', 1);
       expect(bernard.commands.history).to.have.property('length', 1);
 
       // Create Bernard from snapshot and events stack:
-      const bernard2 = (new Person()).init(bernard._snapshot, bernard._events).replay();
+      const bernard2 = yield (new Person())
+        .init(bernard._snapshot, bernard._sourcedEvents)
+        .replay();
       expect(bernard2).to.have.property('firstname', 'Bernard');
-      expect(bernard2._events).to.have.property('length', 1);
+      expect(bernard2._sourcedEvents).to.have.property('length', 1);
       expect(bernard2.commands.history).to.have.property('length', 0);
 
       // Undo the last command:
       bernard.commands.undo();
       expect(bernard).to.have.property('firstname', 'Alice');
-      expect(bernard._events).to.have.property('length', 2);
+      expect(bernard._sourcedEvents).to.have.property('length', 2);
 
       // Redo the last undo:
       bernard.commands.redo();
       expect(bernard).to.have.property('firstname', 'Bernard');
-      expect(bernard._events).to.have.property('length', 3);
+      expect(bernard._sourcedEvents).to.have.property('length', 3);
     });
     // const alice = new Person({
     //   firstname: 'Alice',
@@ -108,14 +110,14 @@ describe('Entity', () => {
     // console.log(11, alice.data, alice.firstname);
 
     // alice.commands.execute('sayHello', ['John'], 'sayGoodBye', ['John']);
-    // console.log(alice._events);
+    // console.log(alice._sourcedEvents);
 
     // alice.address.street = 123;
     // console.log(62, alice.isValid());
 
     // const bernard = new Person();
     // console.log(63, 'Replaying');
-    // bernard.init(alice._snapshot, alice._events).replay();
+    // bernard.init(alice._snapshot, alice._sourcedEvents).replay();
   });
   describe('validation', () => {
     it('validates entity against schema', () => {

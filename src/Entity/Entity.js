@@ -104,9 +104,12 @@ class Entity extends EventSourcing {
    *
    * @returns {object}
    */
-  toJSON() {
-    return this.data;
-  }
+  // toJSON() {
+  //   return Object.assign({
+  //     _version: this._version,
+  //     _uuid: this._uuid,
+  //   }, this.data);
+  // }
   mutator() {
     throw new Errors.MutatorError('Must be implemented');
   }
