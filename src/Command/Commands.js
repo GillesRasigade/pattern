@@ -60,8 +60,7 @@ class Commands {
    */
   execute(execute, executeArguments, undo, undoArguments) {
     // Create the command to be executed:
-    const command = execute instanceof Command ?
-      execute : new this.Command(this.context, execute, executeArguments, undo, undoArguments);
+    const command = new this.Command(this.context, execute, executeArguments, undo, undoArguments);
 
     const result = command.execute();
 
@@ -79,9 +78,6 @@ class Commands {
     // Get the last command from the history:
     if (this.history[this.index]) {
       const command = this.history[this.index].command;
-      if (!command.undoable()) {
-        throw new Error('Last command is not undoable');
-      }
       result = command.undo();
       this.index = this.index - 1;
     }

@@ -86,6 +86,9 @@ class Command {
    * Undo the command function
    */
   undo() {
+    if (!this.undoable()) {
+      throw new Error('Command is not undoable');
+    }
     return this._apply(this._undo, this._undoArguments);
   }
 }

@@ -95,4 +95,16 @@ describe('Commands', () => {
       expect(result).to.be.eql(null);
     });
   });
+  describe('last', () => {
+    it('returns last command successfully', () => {
+      const alice = new Alice();
+
+      expect(alice.commands.last()).to.be.eql(null);
+
+      alice.commands.execute('hello', ['John'], 'bye', ['John']);
+
+      // @FIXME
+      expect(alice.commands.last()).to.not.be.eql(null);
+    });
+  });
 });
