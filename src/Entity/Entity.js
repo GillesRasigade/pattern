@@ -11,15 +11,6 @@ const Errors = require('./Errors');
 
 const entityValidator = new Validator();
 
-/**
- * NOTES:
- * - extends EventEmitter to listen external events published on queues
- * - allows to add validator
- * - allows to add commands
- * - allows to add event sourcing
- * - allows to add mapper
- */
-
 class Entity extends EventSourcing {
   constructor(data = {}, validator = entityValidator) {
     assert(new.target && new.target.name !== 'Entity',
@@ -99,17 +90,6 @@ class Entity extends EventSourcing {
       }
     }
   }
-  /**
-   * Return the instance data as JSON.
-   *
-   * @returns {object}
-   */
-  // toJSON() {
-  //   return Object.assign({
-  //     _version: this._version,
-  //     _uuid: this._uuid,
-  //   }, this.data);
-  // }
   mutator() {
     throw new Errors.MutatorError('Must be implemented');
   }
