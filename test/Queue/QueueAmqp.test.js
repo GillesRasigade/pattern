@@ -43,6 +43,23 @@ describe('QueueAmqp', () => {
     });
   });
 
+  describe('configuration', () => {
+    it('allows to configure exchange name', () => {
+      const queue = new QueueAmqp({
+        exchange: {
+          name: 'exchangeName',
+        },
+      });
+      expect(queue.exchangeName).to.be.equal('exchangeName');
+    });
+    it('allows to configure the queue type', () => {
+      const queue = new QueueAmqp({
+        type: 'fanout',
+      });
+      expect(queue.type).to.be.equal('fanout');
+    });
+  });
+
   describe('#connect()', () => {
     it('allows to connect only RX from environment variable', function* it() {
       const queue = new QueueAmqp({ rx: true });
@@ -106,12 +123,79 @@ describe('QueueAmqp', () => {
   });
 
   describe('#onClose()', () => {
-    it('resolves a Promise when connected', function* it() {
+    it('resolves a Promise when disconnected', function* it() {
       const queue = new QueueAmqp({ rx: 'amqp://rx', tx: 'amqp://rx' });
       yield queue.connect();
       const result = yield queue.onClose();
 
       expect(result).to.be.eql(true);
+    });
+    it('closes listener only successfully', function* it() {
+      const listener = new QueueAmqp({ rx: 'amqp://rx' });
+      yield listener.connect();
+
+      const result = yield listener.onClose();
+
+      expect(result).to.be.eql(true);
+    });
+    it('closes publisher only successfully', function* it() {
+      const publisher = new QueueAmqp({ tx: 'amqp://tx' });
+      yield publisher.connect();
+
+      const result = yield publisher.onClose();
+
+      expect(result).to.be.eql(true);
+    });
+  });
+
+  describe.skip('#ack / nack', () => {
+    before(() => {
+      sandbox.restore();
+    });
+    it('acknowledges messages successfully', function* it(done) {
+      const listener = new QueueAmqp({ name: 'ack', rx: 'amqp://localhost' });
+      yield listener.connect();
+
+      const publisher = new QueueAmqp({ name: 'ack', tx: 'amqp://localhost' });
+      yield publisher.connect();
+
+      let cpt = 0;
+      listener.on('message', (data, message) => {
+        expect(data).to.deep.equal({
+          hello: 'world',
+        });
+        if (cpt === 0) {
+          cpt++;
+          listener.nack(message);
+        } else if (cpt === 1) {
+          listener.ack(message);
+          done();
+        }
+      });
+
+      publisher.emit('message', { hello: 'world' });
+    });
+    it('acknowledges messages automatically if requested', function* it(done) {
+      const listener = new QueueAmqp({ name: 'auto', ack: true, rx: 'amqp://localhost' });
+      yield listener.connect();
+
+      const publisher = new QueueAmqp({ name: 'auto', tx: 'amqp://localhost' });
+      yield publisher.connect();
+
+      let cpt = 0;
+      listener.on('message', data => {
+        expect(data).to.deep.equal({
+          hello: 'world',
+        });
+        cpt++;
+
+        setTimeout(() => {
+          expect(cpt).to.be.eql(1);
+          done();
+        }, 100);
+      });
+
+      publisher.emit('message', { hello: 'world' });
     });
   });
 

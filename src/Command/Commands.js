@@ -3,34 +3,44 @@
 const Command = require('./Command');
 
 /**
- * Commands collection.
  * @class Commands
+ * @constructor
+ *
+ * @param {Object} [context=this] Future commands execution context
+ * @param {Constructor} [CommandConstructor=Command] Constructor of the command
+ *
+ * @description
+ *
+ * Adding the commands capability to an object allows to access naturaly to the
+ * undo, redo pattern.
  *
  * @example
- * const a = { sum: 1 };
+ * const a = {
+ *   sum: 0,
+ *   incr() {
+ *     this.sum++;
+ *   },
+ *   decr() {
+ *     this.sum--;
+ *   }
+ * };
  *
- * const commands = new Commands();
+ * const commands = new pattern.Commands(a);
  *
- * commands.execute(
- *   (subject, inc) => subject.sum += inc,
- *   (subject, inc) => subject.sum -= inc,
- *   [a, 1]
- * );
- * // a.sum = 1;
+ * commands.execute('incr', [], 'decr', []);
+ * console.log(`a.sum = ${a.sum}`); // a.sum = 1;
  *
  * commands.undo();
- * // a.sum = 0;
+ * console.log(`a.sum = ${a.sum}`); // a.sum = 0;
  *
  * commands.redo();
- * // a.sum = 1;
+ * console.log(`a.sum = ${a.sum}`); // a.sum = 1;
  */
 class Commands {
-  /**
-   * @constructor
-   */
-  constructor(context) {
+  constructor(context = this, CommandConstructor = Command) {
     // Store the commands context:
     this.context = context;
+    this.Command = CommandConstructor;
 
     // Initialize the empty history:
     this.history = [];
@@ -56,11 +66,19 @@ class Commands {
 
   /**
    * Execute the given command
+   *
+   * @example
+   * // ...
+   * commands.execute('incr', [], 'decr', []);
+   *
+   * @param {String} execute Method to execute on the given context
+   * @param {Array} executeArguments List of arguments to apply on the method
+   * @param {String} [undo] Method to apply for undo
+   * @param {Array} [executeArguments] List of arguments to apply on the undo method
    */
   execute(execute, executeArguments, undo, undoArguments) {
     // Create the command to be executed:
-    const command = execute instanceof Command ?
-      execute : new Command(this.context, execute, executeArguments, undo, undoArguments);
+    const command = new this.Command(this.context, execute, executeArguments, undo, undoArguments);
 
     const result = command.execute();
 
@@ -71,13 +89,15 @@ class Commands {
   }
 
   /**
-   * Undo the last action
+   * Undo the last executed command if possible.
+   * @see Command#undo
    */
   undo() {
     let result = null;
     // Get the last command from the history:
     if (this.history[this.index]) {
-      result = this.history[this.index].command.undo();
+      const command = this.history[this.index].command;
+      result = command.undo();
       this.index = this.index - 1;
     }
 
@@ -91,11 +111,18 @@ class Commands {
     let result = null;
     const index = this.index + 1;
     if (this.history[index]) {
-      result = this.history[index].command.execute();
+      const command = this.history[index].command;
+      result = command.execute();
       this.index = index;
     }
 
     return result;
+  }
+
+  last() {
+    if (this.history.length === 0) return null;
+
+    return this.history[this.history.length - 1];
   }
 }
 

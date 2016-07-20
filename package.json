@@ -47,9 +47,12 @@
   "dependencies": {
     "amqplib": "^0.4.1",
     "co": "^4.6.0",
+    "fast-json-patch": "^1.0.0",
+    "json-schema-defaults": "^0.1.1",
+    "lodash": "^4.13.1",
     "mongodb": "^2.1.18",
-    "redis": "^2.6.2",
     "node-uuid": "^1.4.7",
+    "redis": "^2.6.2",
     "tv4": "^1.2.7",
     "uws": "^0.7.5",
     "ws": "^1.1.1"

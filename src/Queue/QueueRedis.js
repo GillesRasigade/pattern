@@ -15,7 +15,8 @@ const REDISCLOUD_URL = process.env.REDISCLOUD_URL;
 /**
  * Queue over Redis
  *
- * @alias QueueRedis
+ * @class QueueRedis
+ * @extends {Queue}
  * @constructor
  *
  * @see Queue

@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/%40gilles.rasigade%2Fpattern.svg)](https://badge.fury.io/js/%40gilles.rasigade%2Fpattern) [![Build Status](https://travis-ci.org/GillesRasigade/pattern.svg?branch=master)](https://travis-ci.org/GillesRasigade/pattern) [![Test Coverage](https://codeclimate.com/github/GillesRasigade/pattern/badges/coverage.svg)](https://codeclimate.com/github/GillesRasigade/pattern/coverage) [![Code Climate](https://codeclimate.com/github/GillesRasigade/pattern/badges/gpa.svg)](https://codeclimate.com/github/GillesRasigade/pattern) [![Documentation Status](https://readthedocs.org/projects/pattern/badge/?version=latest)](http://pattern.readthedocs.org/en/latest/?badge=latest) [![npm dependencies](https://david-dm.org/GillesRasigade/pattern.svg)](https://david-dm.org/GillesRasigade/pattern.svg)
 
-Useful patterns for NodeJS development
+_Useful patterns and components for NodeJS applications._
 
 ## Roadmap
 
@@ -26,6 +26,7 @@ distributed manner.
 - [x] EventEmitter
 - [x] AMQP
 - [x] WebSocket
+- [x] Redis
 
 ### Mappers
 
@@ -41,10 +42,10 @@ source and persists it in.
 
 ### Entity
 
-An Entity is a Domain Model object embedding a business logic. She is persisted
+An Entity is a Domain object embedding the business logic. She is persisted
 thanks to the Mapper components.
 
-- [ ] Entity
+- [x] Entity
 
 ### Localization
 

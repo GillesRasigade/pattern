@@ -37,4 +37,4 @@ node_modules
 
 # Automatically generated documentation:
 doc/pattern
-doc/examples
+**test**.js
