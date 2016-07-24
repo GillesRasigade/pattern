@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Command - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Command.html">Command</a><ul class='methods'><li data-type='method'><a href="Command.html#_apply">_apply</a></li><li data-type='method'><a href="Command.html#execute">execute</a></li><li data-type='method'><a href="Command.html#undo">undo</a></li><li data-type='method'><a href="Command.html#undoable">undoable</a></li></ul></li><li><a href="Commands.html">Commands</a><ul class='methods'><li data-type='method'><a href="Commands.html#execute">execute</a></li><li data-type='method'><a href="Commands.html#pushHistory">pushHistory</a></li><li data-type='method'><a href="Commands.html#undo">undo</a></li></ul></li><li><a href="Entity.html">Entity</a><ul class='methods'><li data-type='method'><a href="Entity.html#._defineGettersSetters">_defineGettersSetters</a></li><li data-type='method'><a href="Entity.html#.initConstructor">initConstructor</a></li><li data-type='method'><a href="Entity.html#buildSnapshot">buildSnapshot</a></li><li data-type='method'><a href="Entity.html#init">init</a></li><li data-type='method'><a href="Entity.html#isValid">isValid</a></li><li data-type='method'><a href="Entity.html#push">push</a></li><li data-type='method'><a href="Entity.html#replay">replay</a></li><li data-type='method'><a href="Entity.html#setEvents">setEvents</a></li><li data-type='method'><a href="Entity.html#setSnapshot">setSnapshot</a></li></ul></li><li><a href="EventSourcing.html">EventSourcing</a><ul class='methods'><li data-type='method'><a href="EventSourcing.html#buildSnapshot">buildSnapshot</a></li><li data-type='method'><a href="EventSourcing.html#init">init</a></li><li data-type='method'><a href="EventSourcing.html#push">push</a></li><li data-type='method'><a href="EventSourcing.html#replay">replay</a></li><li data-type='method'><a href="EventSourcing.html#setEvents">setEvents</a></li><li data-type='method'><a href="EventSourcing.html#setSnapshot">setSnapshot</a></li></ul></li><li><a href="Mapper.html">Mapper</a></li><li><a href="MapperMongoDb.html">MapperMongoDb</a><ul class='methods'><li data-type='method'><a href="MapperMongoDb.html#close">close</a></li><li data-type='method'><a href="MapperMongoDb.html#connect">connect</a></li><li data-type='method'><a href="MapperMongoDb.html#deleteObject">deleteObject</a></li><li data-type='method'><a href="MapperMongoDb.html#getObject">getObject</a></li><li data-type='method'><a href="MapperMongoDb.html#getObjectCollection">getObjectCollection</a></li><li data-type='method'><a href="MapperMongoDb.html#getObjectCollectionName">getObjectCollectionName</a></li><li data-type='method'><a href="MapperMongoDb.html#saveObject">saveObject</a></li></ul></li><li><a href="Queue.html">Queue</a><ul class='methods'><li data-type='method'><a href="Queue.html#connect">connect</a></li></ul></li><li><a href="QueueAmqp.html">QueueAmqp</a><ul class='methods'><li data-type='method'><a href="QueueAmqp.html#ack">ack</a></li><li data-type='method'><a href="QueueAmqp.html#close">close</a></li><li data-type='method'><a href="QueueAmqp.html#connect">connect</a></li><li data-type='method'><a href="QueueAmqp.html#connectRxTx">connectRxTx</a></li><li data-type='method'><a href="QueueAmqp.html#emit">emit</a></li><li data-type='method'><a href="QueueAmqp.html#nack">nack</a></li><li data-type='method'><a href="QueueAmqp.html#on">on</a></li><li data-type='method'><a href="QueueAmqp.html#onClose">onClose</a></li></ul></li><li><a href="QueueRedis.html">QueueRedis</a><ul class='methods'><li data-type='method'><a href="QueueRedis.html#close">close</a></li><li data-type='method'><a href="QueueRedis.html#connect">connect</a></li><li data-type='method'><a href="QueueRedis.html#emit">emit</a></li><li data-type='method'><a href="QueueRedis.html#on">on</a></li></ul></li><li><a href="QueueWebSocket.html">QueueWebSocket</a><ul class='methods'><li data-type='method'><a href="QueueWebSocket.html#.portInUse">portInUse</a></li><li data-type='method'><a href="QueueWebSocket.html#broadcast">broadcast</a></li><li data-type='method'><a href="QueueWebSocket.html#close">close</a></li><li data-type='method'><a href="QueueWebSocket.html#connect">connect</a></li><li data-type='method'><a href="QueueWebSocket.html#connectServer">connectServer</a></li><li data-type='method'><a href="QueueWebSocket.html#emit">emit</a></li><li data-type='method'><a href="QueueWebSocket.html#on">on</a></li><li data-type='method'><a href="QueueWebSocket.html#onClose">onClose</a></li><li data-type='method'><a href="QueueWebSocket.html#onMessage">onMessage</a></li><li data-type='method'><a href="QueueWebSocket.html#reconnect">reconnect</a></li></ul></li><li><a href="Validator.html">Validator</a><ul class='methods'><li data-type='method'><a href="Validator.html#addSchema">addSchema</a></li><li data-type='method'><a href="Validator.html#getClassName">getClassName</a></li><li data-type='method'><a href="Validator.html#getSchema">getSchema</a></li><li data-type='method'><a href="Validator.html#isValid">isValid</a></li></ul></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-index_.html">Index</a></li></ul><h3>Global</h3><ul><li><a href="global.html#QUEUE_AMQP_CHANNEL_TYPES">QUEUE_AMQP_CHANNEL_TYPES</a></li><li><a href="global.html#RABBITMQ_BIGWIG_RX_URL">RABBITMQ_BIGWIG_RX_URL</a></li><li><a href="global.html#RABBITMQ_BIGWIG_TX_URL">RABBITMQ_BIGWIG_TX_URL</a></li><li><a href="global.html#REDISCLOUD_URL">REDISCLOUD_URL</a></li><li><a href="global.html#WEBSOCKET_PORT">WEBSOCKET_PORT</a></li><li><a href="global.html#WEBSOCKET_RECONNECT_MAX_ATTEMPTS">WEBSOCKET_RECONNECT_MAX_ATTEMPTS</a></li><li><a href="global.html#WEBSOCKET_RECONNECT_TIMEOUT">WEBSOCKET_RECONNECT_TIMEOUT</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Command</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        Command
+        </h2>
+        
+            <div class="class-description"><p>Command</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="Command"><span class="type-signature"></span>new Command<span class="signature">(context, execute, executeArguments, undo, undoArguments)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Undoable command</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>context of the command</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>execute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>function for action</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>executeArguments</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>context of the command</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>undo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>function for undo</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>undoArguments</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>context of the command</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Command_Command.js.html">Command/Command.js</a>, <a href="Command_Command.js.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const a = { sum: 0 };
+
+const command = new Command(
+  (subject, inc) => subject.sum += inc,
+  (subject, inc) => subject.sum -= inc,
+  [a, 1]
+);
+
+command.execute();
+// a.sum = 1
+
+command.undo();
+// a.sum = 0</code></pre>
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="_apply"><span class="type-signature">(private) </span>_apply<span class="signature">(method, args<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {mixed}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Apply the given function with arguments in the command context.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>method</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Function to call</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    []
+                
+                </td>
+            
+
+            <td class="description last"><p>Arguments to apply on</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Command_Command.js.html">Command/Command.js</a>, <a href="Command_Command.js.html#line81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">mixed</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="execute"><span class="type-signature"></span>execute<span class="signature">()</span><span class="type-signature"> &rarr; {mixed}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Execute the command function with the given arguments</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Command_Command.js.html">Command/Command.js</a>, <a href="Command_Command.js.html#line94">line 94</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">mixed</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="undo"><span class="type-signature"></span>undo<span class="signature">()</span><span class="type-signature"> &rarr; {mixed}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Undo the command if possible.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Command_Command.js.html">Command/Command.js</a>, <a href="Command_Command.js.html#line105">line 105</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Command.html#undoable">#undoable</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        <p>Raises an exception if the command is not <em>undoable</em></p>
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">mixed</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="undoable"><span class="type-signature"></span>undoable<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Is the command undoable.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Command_Command.js.html">Command/Command.js</a>, <a href="Command_Command.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>True if undoable, false otherwise</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Jul 24 2016 13:14:23 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

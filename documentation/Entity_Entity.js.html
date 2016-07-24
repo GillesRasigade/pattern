@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Entity/Entity.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Command.html">Command</a><ul class='methods'><li data-type='method'><a href="Command.html#_apply">_apply</a></li><li data-type='method'><a href="Command.html#execute">execute</a></li><li data-type='method'><a href="Command.html#undo">undo</a></li><li data-type='method'><a href="Command.html#undoable">undoable</a></li></ul></li><li><a href="Commands.html">Commands</a><ul class='methods'><li data-type='method'><a href="Commands.html#execute">execute</a></li><li data-type='method'><a href="Commands.html#pushHistory">pushHistory</a></li><li data-type='method'><a href="Commands.html#undo">undo</a></li></ul></li><li><a href="Entity.html">Entity</a><ul class='methods'><li data-type='method'><a href="Entity.html#._defineGettersSetters">_defineGettersSetters</a></li><li data-type='method'><a href="Entity.html#.initConstructor">initConstructor</a></li><li data-type='method'><a href="Entity.html#buildSnapshot">buildSnapshot</a></li><li data-type='method'><a href="Entity.html#init">init</a></li><li data-type='method'><a href="Entity.html#isValid">isValid</a></li><li data-type='method'><a href="Entity.html#push">push</a></li><li data-type='method'><a href="Entity.html#replay">replay</a></li><li data-type='method'><a href="Entity.html#setEvents">setEvents</a></li><li data-type='method'><a href="Entity.html#setSnapshot">setSnapshot</a></li></ul></li><li><a href="EventSourcing.html">EventSourcing</a><ul class='methods'><li data-type='method'><a href="EventSourcing.html#buildSnapshot">buildSnapshot</a></li><li data-type='method'><a href="EventSourcing.html#init">init</a></li><li data-type='method'><a href="EventSourcing.html#push">push</a></li><li data-type='method'><a href="EventSourcing.html#replay">replay</a></li><li data-type='method'><a href="EventSourcing.html#setEvents">setEvents</a></li><li data-type='method'><a href="EventSourcing.html#setSnapshot">setSnapshot</a></li></ul></li><li><a href="Mapper.html">Mapper</a></li><li><a href="MapperMongoDb.html">MapperMongoDb</a><ul class='methods'><li data-type='method'><a href="MapperMongoDb.html#close">close</a></li><li data-type='method'><a href="MapperMongoDb.html#connect">connect</a></li><li data-type='method'><a href="MapperMongoDb.html#deleteObject">deleteObject</a></li><li data-type='method'><a href="MapperMongoDb.html#getObject">getObject</a></li><li data-type='method'><a href="MapperMongoDb.html#getObjectCollection">getObjectCollection</a></li><li data-type='method'><a href="MapperMongoDb.html#getObjectCollectionName">getObjectCollectionName</a></li><li data-type='method'><a href="MapperMongoDb.html#saveObject">saveObject</a></li></ul></li><li><a href="Queue.html">Queue</a><ul class='methods'><li data-type='method'><a href="Queue.html#connect">connect</a></li></ul></li><li><a href="QueueAmqp.html">QueueAmqp</a><ul class='methods'><li data-type='method'><a href="QueueAmqp.html#ack">ack</a></li><li data-type='method'><a href="QueueAmqp.html#close">close</a></li><li data-type='method'><a href="QueueAmqp.html#connect">connect</a></li><li data-type='method'><a href="QueueAmqp.html#connectRxTx">connectRxTx</a></li><li data-type='method'><a href="QueueAmqp.html#emit">emit</a></li><li data-type='method'><a href="QueueAmqp.html#nack">nack</a></li><li data-type='method'><a href="QueueAmqp.html#on">on</a></li><li data-type='method'><a href="QueueAmqp.html#onClose">onClose</a></li></ul></li><li><a href="QueueRedis.html">QueueRedis</a><ul class='methods'><li data-type='method'><a href="QueueRedis.html#close">close</a></li><li data-type='method'><a href="QueueRedis.html#connect">connect</a></li><li data-type='method'><a href="QueueRedis.html#emit">emit</a></li><li data-type='method'><a href="QueueRedis.html#on">on</a></li></ul></li><li><a href="QueueWebSocket.html">QueueWebSocket</a><ul class='methods'><li data-type='method'><a href="QueueWebSocket.html#.portInUse">portInUse</a></li><li data-type='method'><a href="QueueWebSocket.html#broadcast">broadcast</a></li><li data-type='method'><a href="QueueWebSocket.html#close">close</a></li><li data-type='method'><a href="QueueWebSocket.html#connect">connect</a></li><li data-type='method'><a href="QueueWebSocket.html#connectServer">connectServer</a></li><li data-type='method'><a href="QueueWebSocket.html#emit">emit</a></li><li data-type='method'><a href="QueueWebSocket.html#on">on</a></li><li data-type='method'><a href="QueueWebSocket.html#onClose">onClose</a></li><li data-type='method'><a href="QueueWebSocket.html#onMessage">onMessage</a></li><li data-type='method'><a href="QueueWebSocket.html#reconnect">reconnect</a></li></ul></li><li><a href="Validator.html">Validator</a><ul class='methods'><li data-type='method'><a href="Validator.html#addSchema">addSchema</a></li><li data-type='method'><a href="Validator.html#getClassName">getClassName</a></li><li data-type='method'><a href="Validator.html#getSchema">getSchema</a></li><li data-type='method'><a href="Validator.html#isValid">isValid</a></li></ul></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-index_.html">Index</a></li></ul><h3>Global</h3><ul><li><a href="global.html#QUEUE_AMQP_CHANNEL_TYPES">QUEUE_AMQP_CHANNEL_TYPES</a></li><li><a href="global.html#RABBITMQ_BIGWIG_RX_URL">RABBITMQ_BIGWIG_RX_URL</a></li><li><a href="global.html#RABBITMQ_BIGWIG_TX_URL">RABBITMQ_BIGWIG_TX_URL</a></li><li><a href="global.html#REDISCLOUD_URL">REDISCLOUD_URL</a></li><li><a href="global.html#WEBSOCKET_PORT">WEBSOCKET_PORT</a></li><li><a href="global.html#WEBSOCKET_RECONNECT_MAX_ATTEMPTS">WEBSOCKET_RECONNECT_MAX_ATTEMPTS</a></li><li><a href="global.html#WEBSOCKET_RECONNECT_TIMEOUT">WEBSOCKET_RECONNECT_TIMEOUT</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Entity/Entity.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const assert = require('assert');
+const defaults = require('json-schema-defaults');
+const _ = require('lodash');
+
+const EventSourcing = require('../EventSourcing/EventSourcing');
+const Validator = require('../Validator/Validator');
+const Commands = require('../Command/Commands');
+const Errors = require('./Errors');
+
+const entityValidator = new Validator();
+
+/**
+ * @class Entity
+ * @extends {EventSourcing}
+ *
+ * @description
+ * The entity class aims to ease the use of instances use in combination of
+ * commands pattern and Event Sourcing.
+ *
+ * @constructor
+ * @param {any} [data={}] The data to bind on
+ * @param {Validator} [validator=entityValidator] Entity validator which is
+ * responsible to answer yes or no to the question: isValid.
+ */
+class Entity extends EventSourcing {
+  constructor(data = {}, validator = entityValidator) {
+    assert(new.target &amp;&amp; new.target.name !== 'Entity',
+      'Cannot construct Entity instance directly');
+
+    if (new.target.initialized !== true) {
+      Entity.initConstructor(new.target);
+    }
+
+    assert(new.target.initialized === true,
+      'Cannot construct Entity instance without initializing it');
+
+    // Build data based on the entity schema:
+    const _data = _.merge({}, defaults(new.target.SCHEMA), data);
+
+    super(_data);
+
+    this.validator = validator;
+    this.commands = new Commands(this);
+
+    this.on('execute', this.push.bind(this));
+
+    // Attach the entityName:
+    this._constructor = new.target;
+    this._entityName = new.target.name;
+  }
+  /**
+   * Initialize the Entity with the
+   */
+  static initConstructor(constructor) {
+    if (!constructor.SCHEMA) {
+      // eslint-disable-next-line no-param-reassign
+      constructor.SCHEMA = {};
+    }
+    // Add Entity schema to the validator:
+    entityValidator.addSchema(constructor, constructor.SCHEMA);
+
+    // Expose getter and setter to schema properties:
+    Entity._defineGettersSetters(constructor);
+
+    // Set constructor as initialized:
+    // eslint-disable-next-line no-param-reassign
+    constructor.initialized = true;
+  }
+  /**
+   * Check whether the instance data is valid against schema.
+   *
+   * @returns {boolean}
+   */
+  isValid() {
+    return this.validator.isValid(this);
+  }
+  /**
+   * Define default getters and setters to exposed first level schema properties.
+   *
+   * @returns {void}
+   */
+  static _defineGettersSetters(constructor) {
+    const schema = constructor.SCHEMA;
+    if (schema &amp;&amp; schema.properties) {
+       // eslint-disable-next-line no-restricted-syntax
+      for (const key in schema.properties) {
+        if (!constructor.prototype.hasOwnProperty(key)) {
+          Object.defineProperty(constructor.prototype, key, {
+            // eslint-disable-next-line object-shorthand
+            get: function get() {
+              return this.data[key];
+            },
+            // eslint-disable-next-line object-shorthand
+            set: function set(value) {
+              this.data[key] = value;
+            },
+            enumerable: false,
+            configurable: false,
+          });
+        }
+      }
+    }
+  }
+  mutator() {
+    throw new Errors.MutatorError('Must be implemented');
+  }
+  accessor() {
+    throw new Errors.AccessorError('Must be implemented');
+  }
+}
+
+module.exports = Entity;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Jul 24 2016 13:14:23 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
