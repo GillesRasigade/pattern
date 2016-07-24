@@ -11,7 +11,7 @@
     "eslint": "./node_modules/eslint/bin/eslint.js .",
     "istanbul": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --include-all-sources --root ./src",
     "mocha": "./node_modules/mocha/bin/_mocha",
-    "doc": "./node_modules/jsdoc/jsdoc.js --configure .jsdoc.json -R README.md -u ./doc/tutorials -d ./doc/pattern ./src",
+    "doc": "./node_modules/jsdoc/jsdoc.js --configure .jsdoc.json -R README.md -u ./doc/tutorials ./src",
     "build": "npm install --dev && npm run test"
   },
   "repository": {

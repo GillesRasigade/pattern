@@ -1,7 +1,7 @@
 {
   "opts": {
     "template": "node_modules/minami",
-    "destination": "./docs/",
+    "destination": "./documentation/",
     "encoding": "utf8",
     "private": true,
     "recurse": true
