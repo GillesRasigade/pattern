@@ -1,6 +1,6 @@
 {
   "name": "@gilles.rasigade/pattern",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Useful patterns for NodeJS development",
   "main": "index.js",
   "directories": {
@@ -54,7 +54,7 @@
     "node-uuid": "^1.4.7",
     "redis": "^2.6.2",
     "tv4": "^1.2.7",
-    "uws": "^0.7.5",
+    "uws": "^0.14.5",
     "ws": "^1.1.1"
   }
 }
