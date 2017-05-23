@@ -4,9 +4,9 @@
 
 _Useful patterns and components for NodeJS applications._
 
-## Roadmap
+## Roadmap
 
-### Validator
+### Validator
 
 A Validator is a component validating a data against a schema. Currently the only
 Validator available is for JSON data and JSON Schema definition.
@@ -15,7 +15,7 @@ Validator available is for JSON data and JSON Schema definition.
 - [ ] Date
 - [ ] Number
 
-### Queues
+### Queues
 
 Queues are based on the Interface of EventEmitter where a message can be routed
 to one or several suscribers. Different technologies can be used to distribute
@@ -28,7 +28,7 @@ distributed manner.
 - [x] WebSocket
 - [x] Redis
 
-### Mappers
+### Mappers
 
 Mappers are responsible of the Extract (E) and Load (L) parts from the ETL stack.
 From a given object definition, she is able to load data from a specific data
@@ -40,7 +40,7 @@ source and persists it in.
 - [ ] Redis
 - [ ] PostgreSQL
 
-### Entity
+### Entity
 
 An Entity is a Domain object embedding the business logic. She is persisted
 thanks to the Mapper components.
@@ -57,7 +57,7 @@ Logger component
 
 ### Under consideration
 
-## Getting started
+## Getting started
 
 ### Installation
 
@@ -71,14 +71,14 @@ npm install -S @gilles.rasigade/pattern
 const pattern = require('@gilles.rasigade/pattern');
 ```
 
-### Documentation
+### Documentation
 
 You can find the documentation of the project at the following url:
 http://gillesrasigade.github.io/pattern/documentation
 
 ## Contribute
 
-### Clone and build the code
+### Clone and build the code
 
 ```bash
 git clone git@github.com:GillesRasigade/pattern.git
@@ -86,7 +86,7 @@ cd pattern
 npm build
 ```
 
-### Build
+### Build
 
 The `build` npm command will install all dependencies required for the development
 environment, execute tests to validate the installation then generate documentation
@@ -98,7 +98,7 @@ To build the project, please execute the following command:
 npm run build
 ```
 
-### Documentation
+### Documentation
 
 The project documentation is available after the build process in the folder
 `./doc/pattern/index.html`
