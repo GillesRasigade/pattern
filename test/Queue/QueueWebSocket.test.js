@@ -280,7 +280,6 @@ describe('QueueWebSocket', () => {
       setTimeout(() => {
         queue.close(() => {
           expect(queue.ws).to.have.property('_closeCode', 1000);
-          expect(queue.ws).to.have.property('_closeReceived', true);
           done();
         });
       }, 10);
